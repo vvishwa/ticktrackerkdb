@@ -1,0 +1,18 @@
+.tickerlist {
+    display: flex;
+    margin: auto;
+    border: 1px solid #085972;
+    box-shadow: 0 2px 3px #cccccc;
+    padding: 5px;
+    text-align: center;  
+}
+
+.tickerPanel {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    border: 1px solid #085972;
+    box-shadow: 0 2px 3px #cccccc;
+    padding: 5px; 
+    align-items: center;
+}

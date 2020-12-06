@@ -1,0 +1,1 @@
+00 20 * * 1-5 bash -c "export SSL_VERIFY_SERVER=NO;/home/vijay/q/l64/q /home/vijay/kxblogs/fetchOption.q -rootdir \"/home/vijay/db\" > /tmp/fetchOption.q.log 2>&1"
