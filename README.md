@@ -7,7 +7,7 @@ Ag-Gid: This is one of great API for table and graph and more can be learnt at h
 
 # Getting Started
 
-1. git clone <project_root>
+1. cd ~; git clone <project_root>
 2. cd ~/ticktrackerkdb/src/kdbchannel/q
 3. ./startQ.sh
 4. cd ~/ticktrackerkdb/
@@ -41,14 +41,21 @@ npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/we
 npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
 6. sudo npm start
-    Save the output showing url 
+    Save the output showing url. For example
+    Compiled successfully!
+
+You can now view ticktrackerkdb in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://<your_ip_address>:3000
+
 
 # Play
 
 1. Point your browser to the url is previous step
-2. If this is your first time, you need to build table by running script at ~/ticktrackerkdb/src/kdbchannel/q/fetchEOD/crontab.txt . See below for explantion
+2. If this is your first time, you need to build table by running script at ~/ticktrackerkdb/src/kdbchannel/q/fetchEOD/crontab.txt . See below for inline
     export SSL_VERIFY_SERVER=NO;/home/$USER/q/l64/q /home/$USER/kxblogs/fetchOption.q -rootdir \"/home/$USER/db\" > /tmp/fetchOption.q.log 2>&1
-    Upon successful run, it should build Option and trade related few tables. Install crontab from  ~/ticktrackerkdb/src/kdbchannel/q/fetchEOD/crontab.txt
+    Upon successful run, it should build Option and trade related few tables. Install crontab from  ~/ticktrackerkdb/src/kdbchannel/q/fetchEOD/crontab.txt for sunsequent runs and data collection
 3. The drop down will have Dated Date, Ticker and expiration date populated and show table. You shold also see graph showing volatility changes with strike as below
     ![Implied Volatilty](https://github.com/vvishwa/ticktrackerkdb/blob/main/public/OptionIVOL.png?raw=true)
 4. After few run of days, you can select a particular dated date and see change in IVOL (Implied Volatility) for each expiration to build and track your expectation for price movement of your ticker.
@@ -59,4 +66,4 @@ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
 2. EODHistory may have outliers and need cleansing.
 
 # Reference
-For websocket and its integration with ReactJS has be referred at white page/kx blog referred is from link https://kx.com/blog/single-page-applications-and-kdb-react/
+For websocket and its integration with ReactJS has be referred at white page/kx blog referred is from link https://kx.com/blog/single-page-applications-and-kdb-react/. This is an excellent work and I am following pattern of funcs.js, start.q and main.q
