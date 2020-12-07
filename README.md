@@ -4,8 +4,6 @@ kdb: It is tested with KDB+ 4.0. For license and download visit at https://www.k
 EODHistoryData: This project uses https://eodhistoricaldata.com/ to get option and trae data. The key used is for free uses of single ticker AAPL. However, one can use any ticker provided key is upated mentioned in fecthOption.q
 Ag-Gid: This is one of great API for table and graph and more can be learnt at https://www.ag-grid.com/, for this project ag-grid community addition is used.
 
-# Reference
-For websocket and its integration with ReactJS has be referred at white page/kx blog referred is from link https://kx.com/blog/single-page-applications-and-kdb-react/
 
 # Getting Started
 
@@ -58,4 +56,7 @@ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
 # TODO
 
 1. Add methodolgy to calculate IVOL based on trade history
-2. EODHistory may have outliers and cleansing technique.
+2. EODHistory may have outliers and need cleansing.
+
+# Reference
+For websocket and its integration with ReactJS has be referred at white page/kx blog referred is from link https://kx.com/blog/single-page-applications-and-kdb-react/
