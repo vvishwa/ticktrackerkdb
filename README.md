@@ -15,21 +15,32 @@ For websocket and its integration with ReactJS has be referred at white page/kx 
 4. cd ~/ticktrackerkdb/
 5. sudo npm install
     Below are acceptable warnings
-    
+
 npm WARN ag-charts-react@2.1.0 requires a peer of react@^16.3.0 but none is installed. You must install peer dependencies yourself.
+
 npm WARN ag-charts-react@2.1.0 requires a peer of react-dom@^16.3.0 but none is installed. You must install peer dependencies yourself.
+
 npm WARN ag-grid-react@24.1.1 requires a peer of react@^16.3.0 but none is installed. You must install peer dependencies yourself.
+
 npm WARN ag-grid-react@24.1.1 requires a peer of react-dom@^16.3.0 but none is installed. You must install peer dependencies yourself.
+
 npm WARN tsutils@3.17.1 requires a peer of typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta but none is installed. You must install peer dependencies yourself.
+
 npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.3 (node_modules/chokidar/node_modules/fsevents):
+
 npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
 npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.2.1 (node_modules/fsevents):
+
 npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.2.1: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
 npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/watchpack-chokidar2/node_modules/fsevents):
-npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
-npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/webpack-dev-server/node_modules/fsevents):
+
 npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/webpack-dev-server/node_modules/fsevents):
+
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
 6. sudo npm start
     Save the output showing url 
@@ -41,7 +52,7 @@ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
     export SSL_VERIFY_SERVER=NO;/home/$USER/q/l64/q /home/$USER/kxblogs/fetchOption.q -rootdir \"/home/$USER/db\" > /tmp/fetchOption.q.log 2>&1
     Upon successful run, it should build Option and trade related few tables. Install crontab from  ~/ticktrackerkdb/src/kdbchannel/q/fetchEOD/crontab.txt
 3. The drop down will have Dated Date, Ticker and expiration date populated and show table. You shold also see graph showing volatility changes with strike as below
-
+    ![Implied Volatilty](https://github.com/vvishwa/ticktrackerkdb/blob/main/public/OptionIVOL.png?raw=true)
 4. After few run of days, you can select a particular dated date and see change in IVOL (Implied Volatility) for each expiration to build and track your expectation for price movement of your ticker.
 
 # TODO
