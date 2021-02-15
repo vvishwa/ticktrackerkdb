@@ -1,6 +1,8 @@
 import './App.css';
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
+import TickerTab from './viewer/TickerTab';
+
 import wsFuncs from './kdbchannel/Funcs';
 
 import { Component } from 'react';
@@ -17,7 +19,8 @@ class App extends Component {
       ticker: '',
       exchange: '',
       datedDate: '',
-      optionTable: []
+      optionTable: [],
+      fillConfidencePerc: 0
     }
 
     this.binder = this.binder.bind(this);
@@ -55,20 +58,31 @@ class App extends Component {
     this.getOption(this.state.datedDate, this.state.ticker, this.state.exchange, dateIndex);
   }
 
+  fillInHandler = (val) => {
+    console.log('About to fillIn with value ', val)
+    this.setState({
+      fillConfidencePerc: val
+    })
+  }
+
   render() {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+      <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <TickerPanel
           datedDates={this.state.datedDates}
           tickerList={this.state.tickerList}
           expirationDates={this.state.expirationDates}
           changeD={this.toggleDatedDates}
           changeX={this.toggleExpirationDates}
-          clicked={this.toggleTicker} />
+          clicked={this.toggleTicker} 
+          fillIn={this.fillInHandler}/>
         <h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
         <OptionTab
           optionTable={this.state.optionTable}
+          fillValue={this.state.fillConfidencePerc}
+          shouldEnableFill={this.shouldEnableFill}
         />
+        <TickerTab/>
       </div>
     );
   }
