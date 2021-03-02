@@ -1,11 +1,18 @@
 import './App.css';
+import './Slider.css'
+import React, { PureComponent as Component } from 'react';
+//https://react-bootstrap.github.io/components/navbar/
+import { Nav, Navbar, NavbarBrand } from 'reactstrap';
+//https://reacttraining.com/react-router/core/guides/philosophy
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
 import TickerTab from './viewer/TickerTab';
 
 import wsFuncs from './kdbchannel/Funcs';
 
-import { Component } from 'react';
+//import { Component } from 'react';
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +27,9 @@ class App extends Component {
       exchange: '',
       datedDate: '',
       optionTable: [],
-      fillConfidencePerc: 0
+      fillConfidencePerc: 0,
+      isNight: false,
+      currentTab: 'hidden'
     }
 
     this.binder = this.binder.bind(this);
@@ -66,23 +75,46 @@ class App extends Component {
   }
 
   render() {
+    let slider = (<label className="switch">
+      <input type="checkbox" checked={this.state.isNight} onChange={this.updateCSS} />
+      <span className="slider round"></span>
+    </label>);
+    let tabs = ["/", "/OptionTab", "/TickerTab"];
     return (
-      <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-        <TickerPanel
-          datedDates={this.state.datedDates}
-          tickerList={this.state.tickerList}
-          expirationDates={this.state.expirationDates}
-          changeD={this.toggleDatedDates}
-          changeX={this.toggleExpirationDates}
-          clicked={this.toggleTicker} 
-          fillIn={this.fillInHandler}/>
-        <h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
-        <OptionTab
-          optionTable={this.state.optionTable}
-          fillValue={this.state.fillConfidencePerc}
-          shouldEnableFill={this.shouldEnableFill}
-        />
-        <TickerTab/>
+      <div className={this.state.isNight ? 'nightMode' : 'dayMode'}>
+        <Router>
+          <div>
+            <div>
+              <Navbar>
+                <Nav>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[0] ? "active" : ""} to={tabs[0]}>OptionTab</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[1] ? "active" : ""} to={tabs[1]}>TickerTab</NavbarBrand>
+                </Nav>
+                {slider}
+              </Navbar>
+            </div>
+            <Switch>
+              <Route exact path={tabs[0]} render={(props) => 
+              <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}><TickerPanel
+                  tabChange={this.tabChange}
+                  datedDates={this.state.datedDates}
+                  tickerList={this.state.tickerList}
+                  expirationDates={this.state.expirationDates}
+                  changeD={this.toggleDatedDates}
+                  changeX={this.toggleExpirationDates}
+                  clicked={this.toggleTicker}
+                  fillIn={this.fillInHandler} /><h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
+                  <OptionTab
+                    tabChange={this.tabChange}
+                    optionTable={this.state.optionTable}
+                    fillValue={this.state.fillConfidencePerc}
+                    shouldEnableFill={this.shouldEnableFill} /></div>
+              }
+              />
+              <Route path={tabs[1]} render={(props) => <TickerTab/>} />
+            </Switch>
+          </div>
+        </Router>
       </div>
     );
   }

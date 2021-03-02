@@ -94,4 +94,12 @@ wsFuncs.updateCSS = function () {
     document.body.style.backgroundColor = bg;
 }
 
+wsFuncs.tabChange = function(){
+    let currentTab=window.location.pathname;
+    //Don't display the scrollbar for the calendar
+    let scroll = (currentTab==='/') ? 'hidden' : 'initial';
+    document.body.style.overflow = scroll;
+    this.setState({currentTab})
+}
+
 export default wsFuncs

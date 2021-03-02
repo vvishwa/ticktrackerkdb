@@ -9,11 +9,15 @@ type TickProps = {
     clicked: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     changeX: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     fillIn: (conf: string) => void;
+    tabChange: () => void;
 };
 
 const TickerPanel = (props: TickProps) => {
 
     const [param, setParam] = useState<{conf:string}>({ conf: ''});
+
+    const [tabActive] = useState(props);
+    tabActive.tabChange();
 
     const dateddates = props.datedDates.map(e => { return <option key={e} value={e}>{e}</option> });
     const tkrLabel = props.tickerList.map(e => { return <option key={e} value={e}>{e}</option> });

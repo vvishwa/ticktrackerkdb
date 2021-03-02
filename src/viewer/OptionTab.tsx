@@ -9,12 +9,15 @@ import { AgChartsReact } from 'ag-charts-react';
 import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
 
 
-const OptionTab = (props: { optionTable: any, fillValue: any, }) => {
+const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function}) => {
     const optionTable = props.optionTable;
     const fillValue = props.fillValue;
 
     const [gridApi, setGridApi] = useState<{gridApi:null|GridApi}>({ gridApi: null});
     let enable = true;
+
+    const [tabActive] = useState(props);
+    tabActive.tabChange();
 
     if (gridApi.gridApi !== null) {
         gridApi.gridApi.addEventListener('rangeSelectionChanged', (event: RangeSelectionChangedEvent) => {
@@ -27,7 +30,6 @@ const OptionTab = (props: { optionTable: any, fillValue: any, }) => {
                     const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
                     const columnDef = cells[0].columns[0].getColDef();
                     const isEditable = columnDef.editable;
-                    const field = columnDef.field;
                     
                     //console.log('Cells selected with startRowIndex ', startRowIndex, ', endRowIndex ', endRowIndex, ', isEdtable ', isEditable, ', field ', field);
                     if (startRowIndex !== null && endRowIndex !== null) {
