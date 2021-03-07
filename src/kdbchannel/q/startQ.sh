@@ -1,3 +1,3 @@
 #!/bin/bash -x
 
-rlwrap /home/vijay/q/l64/q qFiles/start.q -p 5001 -rootdir "/home/vijay/db" -ticker "APPL.US"
+rlwrap /home/{USER}/q/l64/q qFiles/start.q -p 5001 -rootdir "/home/{USER}/db" -ticker "APPL.US"
