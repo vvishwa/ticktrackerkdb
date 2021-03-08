@@ -1,4 +1,7 @@
 system"c 20 170";
+/* subs table to keep track of current subscriptions */
+subs:3!flip `handle`id`func`params!"iis*"$\:();
+
 formatWS:{[x;trap]
  x:.j.k x;
  fname:x`func;
@@ -24,9 +27,13 @@ prepSproc:{[x]
 
 .z.ws:{
  .dev.ws:x; 
- show formatWS[x; 1b]
+ if[not x[1]~`sub;show formatWS[x; 1b]]
+ if[x[1]~`sub;sub[x[0]; x[1]; x[2]]]
  };
  
+ /*subscribe to something */
+sub:{[id;funcName;argument] `subs upsert(.z.w;id;funcName;enlist argument)};
+
 debug:{
  formatWS[.dev.ws; 0b]
  };
