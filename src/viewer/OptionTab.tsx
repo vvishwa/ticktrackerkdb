@@ -9,20 +9,44 @@ import { AgChartsReact } from 'ag-charts-react';
 import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
 
 
-const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function}) => {
+const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function, enableCorrection:Function}) => {
     const optionTable = props.optionTable;
     const fillValue = props.fillValue;
+    const enableCorrection = props.enableCorrection;
 
     const [gridApi, setGridApi] = useState<{gridApi:null|GridApi}>({ gridApi: null});
-    let enable = true;
+
+    console.log('OptionTab: fillValue ', fillValue);
+
+    if (gridApi.gridApi !== null && fillValue !== 0) {
+        const cells:CellRange[] = gridApi.gridApi.getCellRanges();
+                
+        if (cells.length > 0) {
+            const startRowIndex:number = cells[0].startRow?.rowIndex === undefined? 0: cells[0].startRow?.rowIndex;
+            const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
+            const columnDef = cells[0].columns[0].getColDef();
+            const isEditable = columnDef.editable;
+            
+            //console.log('Cells selected with startRowIndex ', startRowIndex, ', endRowIndex ', endRowIndex, ', isEdtable ', isEditable, ', field ', field);
+            if (startRowIndex !== null && endRowIndex !== null && startRowIndex !== endRowIndex) {
+                for(let indx=startRowIndex; indx <= endRowIndex; indx++) {
+                    if (isEditable) {
+                        gridApi.gridApi?.getDisplayedRowAtIndex(indx).setDataValue(cells[0].columns[0], fillValue);
+                    }
+                }
+            gridApi.gridApi.clearRangeSelection(); 
+            enableCorrection(false);
+            }
+        }
+    }
 
     const [tabActive] = useState(props);
     tabActive.tabChange();
 
     if (gridApi.gridApi !== null) {
         gridApi.gridApi.addEventListener('rangeSelectionChanged', (event: RangeSelectionChangedEvent) => {
-            if (event.finished === true) {
-                enable = true;
+            if (event.finished) {
+                
                 const cells:CellRange[] = event.api.getCellRanges();
                 
                 if (cells.length > 0) {
@@ -32,15 +56,14 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
                     const isEditable = columnDef.editable;
                     
                     //console.log('Cells selected with startRowIndex ', startRowIndex, ', endRowIndex ', endRowIndex, ', isEdtable ', isEditable, ', field ', field);
-                    if (startRowIndex !== null && endRowIndex !== null) {
+                    if (startRowIndex !== null && endRowIndex !== null && startRowIndex !== endRowIndex) {
                         for(let indx=startRowIndex; indx <= endRowIndex; indx++) {
-                            if (isEditable && enable === true) gridApi.gridApi?.getDisplayedRowAtIndex(indx).setDataValue(cells[0].columns[0], fillValue);
+                            if (isEditable) enableCorrection(true);
                         }
+                    } else {
+                        enableCorrection(false);
                     }
                 }
-            }
-            if (event.started === true) {
-                enable = false;
             }
         });
         

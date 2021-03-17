@@ -5,16 +5,21 @@ type TickProps = {
     datedDates: any[];
     tickerList: any[];
     expirationDates: any[];
+    canCorrect:boolean;
     changeD: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     clicked: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     changeX: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     fillIn: (conf: string) => void;
     tabChange: () => void;
+    
 };
 
 const TickerPanel = (props: TickProps) => {
 
     const [param, setParam] = useState<{conf:string}>({ conf: ''});
+    
+    const canCorrect = !props.canCorrect;
+    console.log('TickPanel. confEnabled? ', canCorrect);
 
     const [tabActive] = useState(props);
     tabActive.tabChange();
@@ -64,7 +69,7 @@ const TickerPanel = (props: TickProps) => {
                     <input onChange={(v) => setParam({conf: v.target.value})} value={param.conf}/>
                 </div>
                 <div className="tickerlist">
-                    <button onClick={() => { props.fillIn(param.conf)}}>Repeat</button>
+                    <button disabled={canCorrect} onClick={() => { props.fillIn(param.conf)}}>Repeat</button>
                 </div>
             </div>
         </div>

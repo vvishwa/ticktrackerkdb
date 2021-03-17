@@ -28,6 +28,7 @@ class App extends Component {
       datedDate: '',
       optionTable: [],
       fillConfidencePerc: 0,
+      canCorrect:false,
       isNight: false,
       currentTab: 'hidden'
     }
@@ -68,10 +69,22 @@ class App extends Component {
   }
 
   fillInHandler = (val) => {
-    console.log('About to fillIn with value ', val)
-    this.setState({
-      fillConfidencePerc: val
-    })
+    if (val !== this.state.fillConfidencePerc) {
+      console.log('About to fillIn with value ', val)
+      this.setState({
+        fillConfidencePerc: val
+      })
+    }
+  }
+
+  enableCorrectionHandler = (flag) => {
+    if (!flag) {
+      this.setState({fillConfidencePerc:0.0})
+    }
+    if (this.state.canCorrect !== flag) {
+      this.setState({canCorrect:flag});
+      console.log('Changed state to enable correction ', flag)
+    }
   }
 
   render() {
@@ -103,12 +116,13 @@ class App extends Component {
                   changeD={this.toggleDatedDates}
                   changeX={this.toggleExpirationDates}
                   clicked={this.toggleTicker}
+                  canCorrect={this.state.canCorrect}
                   fillIn={this.fillInHandler} /><h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
                   <OptionTab
                     tabChange={this.tabChange}
                     optionTable={this.state.optionTable}
                     fillValue={this.state.fillConfidencePerc}
-                    shouldEnableFill={this.shouldEnableFill} /></div>
+                    enableCorrection={this.enableCorrectionHandler} /></div>
               }
               />
               <Route path={tabs[1]} render={(props) => <TickerTab/>} />
