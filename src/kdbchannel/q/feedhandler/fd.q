@@ -1,9 +1,9 @@
-default:.Q.def[`ticker1`rootdir1!enlist [enlist "AAL,VISL"; enlist "/home/vijay/td/db"]] .Q.opt .z.x
-dbdir0:default`rootdir1
+default:.Q.def[`ticker`rootdir!enlist [enlist "AAL,VISL"; enlist "/home/vijay/td/db"]] .Q.opt .z.x
+dbdir0:default`rootdir
 dbdir:dbdir0[0]
 show default
 
-symbol:first default[`ticker1]
+symbol:first default[`ticker]
 consumer_key:"NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1"
 /curl -X GET --header "Authorization: " "https://api.tdameritrade.com/v1/marketdata/quotes?apikey=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&symbol=VISL"
 
