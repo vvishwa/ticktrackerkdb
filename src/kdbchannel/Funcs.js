@@ -64,7 +64,7 @@ wsFuncs.postGetExpirations = function (expirationDates) {
 }
 
 wsFuncs.getSubscriptions = function (tickers) {
-    (this.qPromise("subs", this.q, [...tickers])).then(this.postGetSubscriptions).catch(this.error)
+    (this.qPromise(".rt.subscribe", this.q, [...tickers])).then(this.postGetSubscriptions).catch(this.error)
 }
 wsFuncs.postGetSubscriptions = function (tickers) {
     console.log(( tickers + '').split(','))

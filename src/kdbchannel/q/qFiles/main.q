@@ -27,12 +27,17 @@ prepSproc:{[x]
 
 .z.ws:{
  .dev.ws:x; 
- if[not x[1]~`sub;show formatWS[x; 1b]]
- if[x[1]~`sub;sub[x[0]; x[1]; x[2]]]
+ p:.j.k .dev.ws;
+ if[not (p`func)~".rt.subscribe";show formatWS[x; 1b]]
+ if[(p`func)~".rt.subscribe";.rt.subscribe[x]]
  };
  
  /*subscribe to something */
-.rt.subscribe:{[id;funcName;argument] `subs upsert(.z.w;id;funcName;enlist argument)};
+.rt.subscribe:{
+ x:.j.k x;
+ fname:`getQuotes;
+ id:x`id;
+ arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg)};
 
 debug:{
  formatWS[.dev.ws; 0b]
