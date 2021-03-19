@@ -1,6 +1,7 @@
 system"c 20 170";
 /* subs table to keep track of current subscriptions */
 subs:3!flip `handle`id`func`params!"iis*"$\:();
+quote:flip `time`sym`bid`ask!"nsff"$\:();
 
 formatWS:{[x;trap]
  x:.j.k x;
@@ -31,13 +32,27 @@ prepSproc:{[x]
  if[not (p`func)~".rt.subscribe";show formatWS[x; 1b]]
  if[(p`func)~".rt.subscribe";.rt.subscribe[x]]
  };
- 
+
+.z.wc: {delete from `subs where handle=x};
  /*subscribe to something */
 .rt.subscribe:{
  x:.j.k x;
  fname:`getQuotes;
  id:x`id;
  arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg)};
+
+getQuotes:{
+  filter:$[all raze null x;distinct quote`sym;raze x];
+  res: 0!select last bid,last ask by sym,last time from quote where sym in filter;
+  `func`result!(`getQuotes;res)};
+/*publish data according to subs table */
+pub:{
+  row:(0!subs)[x];
+  (neg row[`handle]) .j.j (row[`id]; row[`func]; (value row[`func])[row[`params]])
+  };
+
+/* trigger refresh every 100ms */
+.z.ts:{pub each til count subs};
 
 debug:{
  formatWS[.dev.ws; 0b]
