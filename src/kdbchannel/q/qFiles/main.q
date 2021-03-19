@@ -32,7 +32,7 @@ prepSproc:{[x]
  };
  
  /*subscribe to something */
-sub:{[id;funcName;argument] `subs upsert(.z.w;id;funcName;enlist argument)};
+.rt.subscribe:{[id;funcName;argument] `subs upsert(.z.w;id;funcName;enlist argument)};
 
 debug:{
  formatWS[.dev.ws; 0b]

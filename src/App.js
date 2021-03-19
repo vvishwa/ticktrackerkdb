@@ -27,6 +27,7 @@ class App extends Component {
       exchange: '',
       datedDate: '',
       optionTable: [],
+      subscription: [],
       fillConfidencePerc: 0,
       canCorrect:false,
       isNight: false,
@@ -50,6 +51,11 @@ class App extends Component {
       exchange: tmp[1]
     })
     this.getExpirations(tmp[0], tmp[1]);
+  }
+
+  subscribe = (tickers) => {
+    console.log('subscribing  to ', tickers)
+    this.getSubscriptions(tickers);
   }
 
   toggleDatedDates = (event) => {
@@ -125,7 +131,13 @@ class App extends Component {
                     enableCorrection={this.enableCorrectionHandler} /></div>
               }
               />
-              <Route path={tabs[1]} render={(props) => <TickerTab/>} />
+              <Route path={tabs[1]} render={(props) => 
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '20%'}}>
+                <TickerTab
+                  subsHandler={this.subscribe}
+                />
+              </div>
+              } />
             </Switch>
           </div>
         </Router>
