@@ -27,7 +27,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #6170fb;
 }
 
 @keyframes App-logo-spin {
@@ -43,12 +43,28 @@ body {font-family: Arial}
 .header-month {width:60px; cursor:default}
 .header-date {width:26px; cursor:default}
 
+.nav {
+  margin: 10px;
+}
+
 .dayMode .navbar{
+    align-content: center;
     background-color: #0070cd;
 }
 
+.nightMode .navbar{
+  align-content: center;
+  background-color: #0070cd;
+}
+
 .navbar-brand{
-    color: #ffffffad;
+  font-size: 20px;
+  color: #ffffffad;
+  padding-left: 2%;
+}
+
+.daynightslide {
+  padding-left: 85%;
 }
 
 .navbar-brand:hover {

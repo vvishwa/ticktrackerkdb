@@ -106,10 +106,10 @@ class App extends Component {
             <div>
               <Navbar>
                 <Nav>
-                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[0] ? "active" : ""} to={tabs[0]}>OptionTab</NavbarBrand>
-                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[1] ? "active" : ""} to={tabs[1]}>TickerTab</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[0] ? "active" : ""} to={tabs[0]}>Option</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[1] ? "active" : ""} to={tabs[1]}>Ticker</NavbarBrand>
+                  <NavbarBrand className="daynightslide">{slider}</NavbarBrand>
                 </Nav>
-                {slider}
               </Navbar>
             </div>
             <Switch>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-
+import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
@@ -42,20 +42,22 @@ class TickerTab extends Component<TickerTabProps, {}> {
 
     render() {
         return (
-            <div className="ag-theme-alpine" style={ { height: 400, width: '90%' } } >
-                <button style={{display: 'flex', fontSize:'10x', border:'3x' }} onClick={this.clickToSubscribe} >Subscribe</button>
-                <AgGridReact
-                    rowData={[{ticker: ''}]}
-                    columnDefs={this.createColunDefs()}
-                    
-                    ref={(grid: any) => {
-                        if (grid) {
-                            this.gridOptions = grid.gridOptions;
-                        }
-                    }}
-                    onGridReady={this.onGridReady}>
-                    
-                </AgGridReact>                
+            <div className="ag-theme-alpine" style={ {width: '90%' } } >
+                <button className='tickerlist' onClick={this.clickToSubscribe} >Subscribe</button>
+                <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
+                    <AgGridReact
+                        rowData={[{ticker: ''}]}
+                        columnDefs={this.createColunDefs()}
+                        
+                        ref={(grid: any) => {
+                            if (grid) {
+                                this.gridOptions = grid.gridOptions;
+                            }
+                        }}
+                        onGridReady={this.onGridReady}>
+                        
+                    </AgGridReact> 
+                </div>     
             </div>
         );
     }    
