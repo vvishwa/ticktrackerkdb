@@ -1,7 +1,10 @@
 system"c 20 170";
 /* subs table to keep track of current subscriptions */
 subs:3!flip `handle`id`func`params!"iis*"$\:();
-quote:flip `time`sym`bid`ask!"nsff"$\:();
+/quote:flip `time`sym`bid`ask!"nsff"$\:();
+upd:insert;
+
+quote: flip `assetType`assetMainType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTimeInLong`tradeTimeInLong`mark`exchange`exchangeName`marginable`shortable`volatility`digits`52WkHigh`52WkLow`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`regularMarketTradeTimeInLong`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!"sssssffsffsffsfffsfffiifssbbfiffifffssfiiiffffb"$\:();
 
 formatWS:{[x;trap]
  x:.j.k x;
@@ -42,8 +45,8 @@ prepSproc:{[x]
  arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg)};
 
 getQuotes:{
-  filter:$[all raze null x;distinct quote`sym;raze x];
-  res: 0!select last bid,last ask by sym,last time from quote where sym in filter;
+  filter:$[all raze null x;distinct quote`symbol;raze x];
+  res: 0!select assetType,assetMainType,cusip,symbol,description,bidPrice,bidSize,bidId,askPrice,askSize,askId,lastPrice,lastSize,lastId,openPrice,highPrice,lowPrice,bidTick,closePrice,netChange,totalVolume,quoteTimeInLong,tradeTimeInLong,mark,exchange,exchangeName,marginable,shortable,volatility,digits,nAV,peRatio,divAmount,divYield,divDate,securityStatus,regularMarketLastPrice,regularMarketLastSize,regularMarketNetChange,regularMarketTradeTimeInLong,netPercentChangeInDouble,markChangeInDouble,markPercentChangeInDouble,regularMarketPercentChangeInDouble,delayed from quote where symbol in filter;
   `func`result!(`getQuotes;res)};
 /*publish data according to subs table */
 pub:{

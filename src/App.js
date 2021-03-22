@@ -31,7 +31,8 @@ class App extends Component {
       fillConfidencePerc: 0,
       canCorrect:false,
       isNight: false,
-      currentTab: 'hidden'
+      currentTab: 'hidden',
+      getQuotes_rslt:[]
     }
 
     this.binder = this.binder.bind(this);
@@ -132,9 +133,10 @@ class App extends Component {
               }
               />
               <Route path={tabs[1]} render={(props) => 
-              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '20%'}}>
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '90%'}}>
                 <TickerTab
                   subsHandler={this.subscribe}
+                  getQuotes_rslt={this.state.getQuotes_rslt}
                 />
               </div>
               } />
@@ -194,6 +196,19 @@ class App extends Component {
     };
     this.state.ws.postQ[id][f](fArgs);
     //console.log('here '+this.state.ws.postQ[id][f]);
+
+    if (fArgs['func'] !== null && fArgs['func'] === 'getQuotes') {
+      if (fArgs['result'] !== null) {
+        //console.log('getQuotes is non empty ', fArgs['result']);
+
+        const getQuotes_rslt = fArgs['result'].map((r)=> {
+          return r;
+        });
+
+        console.log('result ', getQuotes_rslt);
+        this.setState({getQuotes_rslt:getQuotes_rslt});
+      }
+    }
   };
 }
 

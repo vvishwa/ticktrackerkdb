@@ -7,16 +7,27 @@ import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, Gri
 
 type TickerTabProps = {
     subsHandler: (conf: string) => void;
+    getQuotes_rslt:any[];
 };
 
-class TickerTab extends Component<TickerTabProps, {}> {
+type TickerTabState = {
+    subscription:any[];
+    //rowData:any[];
+    tickerList:string[];
+};
+
+class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
     constructor(props: TickerTabProps | Readonly<TickerTabProps>) {
         super(props);
 
         this.state = {
-            subscription: []
+            tickerList: [],
+            subscription: [],
+            //rowData: this.props.getQuotes_rslt.length === 0? [{ticker:''}]:this.props.getQuotes_rslt,
         }
+
+        //console.log('rowData ', this.state.rowData);
 
         this.clickToSubscribe = this.clickToSubscribe.bind(this);
     }
@@ -46,7 +57,7 @@ class TickerTab extends Component<TickerTabProps, {}> {
                 <button className='tickerlist' onClick={this.clickToSubscribe} >Subscribe</button>
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
                     <AgGridReact
-                        rowData={[{ticker: ''}]}
+                        rowData={this.props.getQuotes_rslt.length === 0? [{ticker:''}]:this.props.getQuotes_rslt}
                         columnDefs={this.createColunDefs()}
                         
                         ref={(grid: any) => {
@@ -64,7 +75,8 @@ class TickerTab extends Component<TickerTabProps, {}> {
 
     createColunDefs(): (ColDef|ColGroupDef)[] {
         return [
-            {field: 'ticker', headerName:'Ticker', singleClickEdit:true, editable: true}
+            {field: 'ticker', headerName:'Ticker', singleClickEdit:true, editable: true},
+            {field: 'bidPrice', headerName:'Bid Price'}
         ]
     }
 
@@ -75,17 +87,15 @@ class TickerTab extends Component<TickerTabProps, {}> {
     }
     
     addEventHandlers() {
-        console.log('addEventHandlers...')
-        if (this.gridOptions) {
-            console.log('gridoptions....')
-        }
-
         if(this.gridOptions) {
-            console.log('gridApi...')
             this.gridOptions.onCellEditingStopped = (event: CellEditingStoppedEvent) => {
-                console.log('cell editing stopped ', event)
                 if (this.gridApi) {
-                    this.gridApi.applyTransaction({add:[{ticker:''}]})
+                    const items:string[] = [];
+                    this.gridApi.forEachNode((node:RowNode) => {
+                        items.push(node.data.ticker);
+                    })
+                    if (items[items.length-1] !== '')
+                        this.gridApi.applyTransaction({add:[{ticker:''}]})
                 }
             }
         }
