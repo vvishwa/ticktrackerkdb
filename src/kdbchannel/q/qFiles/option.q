@@ -44,3 +44,13 @@ show lotdir
   eodtrade:get path; select from eodtrade }
 
 .eod.getDatedDates:{system "ls -1 ",dbdir,"/options/AAPL.US"}
+
+.sod.getPositions:{
+ positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
+ positions:select averagePrice,longQuantity,settledLongQuantity,instrument,marketValue from positionsraw[`securitiesAccount;`positions];
+ positions}
+
+.sod.getTrades:{
+ trades:.j.k raze read0 `$"/home/vijay/td/transaction.json";
+ select from trades
+ }
