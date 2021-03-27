@@ -46,7 +46,7 @@ prepSproc:{[x]
 
 getQuotes:{
   filter:$[all raze null x;distinct quote`symbol;raze x];
-  res: 0!select assetType,assetMainType,cusip,symbol,description,bidPrice,bidSize,bidId,askPrice,askSize,askId,lastPrice,lastSize,lastId,openPrice,highPrice,lowPrice,bidTick,closePrice,netChange,totalVolume,quoteTimeInLong,tradeTimeInLong,mark,exchange,exchangeName,marginable,shortable,volatility,digits,nAV,peRatio,divAmount,divYield,divDate,securityStatus,regularMarketLastPrice,regularMarketLastSize,regularMarketNetChange,regularMarketTradeTimeInLong,netPercentChangeInDouble,markChangeInDouble,markPercentChangeInDouble,regularMarketPercentChangeInDouble,delayed from quote where symbol in filter;
+  res: 0!select last assetType, last assetMainType, last cusip, last description, last bidPrice, last bidSize, last bidId, last askPrice, last askSize, last askId, last lastPrice, last lastSize, last lastId, last openPrice, last highPrice, last lowPrice, last bidTick by symbol, last closePrice, last netChange, last totalVolume, last quoteTimeInLong, last tradeTimeInLong, last mark, last exchange, last exchangeName, last marginable, last shortable, last volatility, last digits, last nAV, last peRatio, last divAmount, last divYield, last divDate, last securityStatus, last regularMarketLastPrice, last regularMarketLastSize, last regularMarketNetChange, last regularMarketTradeTimeInLong, last netPercentChangeInDouble, last markChangeInDouble, last markPercentChangeInDouble, last regularMarketPercentChangeInDouble, last delayed from quote where symbol in filter;
   `func`result!(`getQuotes;res)};
 /*publish data according to subs table */
 pub:{
