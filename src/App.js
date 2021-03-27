@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
 import TickerTab from './viewer/TickerTab';
+import PositionTab from './viewer/PositionTab';
+import TradeTab from './viewer/TradeTab';
 
 import wsFuncs from './kdbchannel/Funcs';
 
@@ -32,7 +34,9 @@ class App extends Component {
       canCorrect:false,
       isNight: false,
       currentTab: 'hidden',
-      getQuotes_rslt:[]
+      getQuotes_rslt:[],
+      position:[],
+      trade:[]
     }
 
     this.binder = this.binder.bind(this);
@@ -99,7 +103,7 @@ class App extends Component {
       <input type="checkbox" checked={this.state.isNight} onChange={this.updateCSS} />
       <span className="slider round"></span>
     </label>);
-    let tabs = ["/", "/OptionTab", "/TickerTab"];
+    let tabs = ["/OptionTab", "/TickerTab", "/PostionTab", "/TradeTab"];
     return (
       <div className={this.state.isNight ? 'nightMode' : 'dayMode'}>
         <Router>
@@ -107,8 +111,10 @@ class App extends Component {
             <div>
               <Navbar>
                 <Nav>
-                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[0] ? "active" : ""} to={tabs[0]}>Option</NavbarBrand>
-                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[1] ? "active" : ""} to={tabs[1]}>Ticker</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === 'hidden' ? "active" : ""} to={tabs[0]}>Historical Option</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[1] ? "active" : ""} to={tabs[1]}>Delayed Quotes</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[2] ? "active" : ""} to={tabs[2]}>Current Position</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[3] ? "active" : ""} to={tabs[3]}>Trades</NavbarBrand>
                   <NavbarBrand className="daynightslide">{slider}</NavbarBrand>
                 </Nav>
               </Navbar>
@@ -133,11 +139,21 @@ class App extends Component {
               }
               />
               <Route path={tabs[1]} render={(props) => 
-              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', width: '90%'}}>
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <TickerTab
                   subsHandler={this.subscribe}
                   getQuotes_rslt={this.state.getQuotes_rslt}
                 />
+              </div>
+              } />
+              <Route path={tabs[2]} render={(props) => 
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                <PositionTab position={this.state.position}/>
+              </div>
+              } />
+              <Route path={tabs[3]} render={(props) => 
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                <TradeTab trade={this.state.trade}/>
               </div>
               } />
             </Switch>

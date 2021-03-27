@@ -4,15 +4,16 @@ import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
+import { quoteColDefs } from './QuoteColumnDefs';
+import { Quote } from '../dto/quote'
 
 type TickerTabProps = {
     subsHandler: (conf: string) => void;
-    getQuotes_rslt:any[];
+    getQuotes_rslt:Quote[];
 };
 
 type TickerTabState = {
     subscription:any[];
-    //rowData:any[];
     tickerList:string[];
 };
 
@@ -24,10 +25,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
         this.state = {
             tickerList: [],
             subscription: [],
-            //rowData: this.props.getQuotes_rslt.length === 0? [{ticker:''}]:this.props.getQuotes_rslt,
         }
-
-        //console.log('rowData ', this.state.rowData);
 
         this.clickToSubscribe = this.clickToSubscribe.bind(this);
     }
@@ -43,7 +41,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
                 tickerList.push(node.data)
             })
 
-            const ll = tickerList.filter((v: { ticker: string | undefined; }) => { if (v.ticker !== undefined && v.ticker !== '') return true; else return false}).map((v:any) => {return v.ticker});
+            const ll = tickerList.filter((v: { symbol: string | undefined; }) => { if (v.symbol !== undefined && v.symbol !== '') return true; else return false}).map((v:any) => {return v.symbol});
 
             console.log('ll = ', ll)
             this.setState({tickerList: ll})
@@ -53,12 +51,14 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
     render() {
         return (
-            <div className="ag-theme-alpine" style={ {width: '90%' } } >
+            <div className="ag-theme-alpine" style={ {width: '95%' } } >
                 <button className='tickerlist' onClick={this.clickToSubscribe} >Subscribe</button>
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
                     <AgGridReact
-                        rowData={this.props.getQuotes_rslt.length === 0? [{ticker:''}]:this.props.getQuotes_rslt}
+                        rowData={this.props.getQuotes_rslt.length === 0? [{symbol:''}]:this.props.getQuotes_rslt}
                         columnDefs={this.createColunDefs()}
+                        defaultColDef={this.createDefColDefs()}
+                        getRowNodeId={(n:Quote) =>{return n.symbol}}
                         
                         ref={(grid: any) => {
                             if (grid) {
@@ -74,15 +74,20 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     }    
 
     createColunDefs(): (ColDef|ColGroupDef)[] {
-        return [
-            {field: 'ticker', headerName:'Ticker', singleClickEdit:true, editable: true},
-            {field: 'bidPrice', headerName:'Bid Price'}
-        ]
+        return quoteColDefs
+    }
+
+    createDefColDefs(): (ColDef|ColGroupDef) {
+        return {
+            autoHeight: false,
+            resizable: true,
+            cellRenderer: 'agAnimateSlideCellRenderer'
+        }
     }
 
     onGridReady = (params: GridReadyEvent) => {
         this.gridApi = params.api;
-        
+        params.columnApi.autoSizeAllColumns();
         this.addEventHandlers();
     }
     
@@ -92,10 +97,10 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
                 if (this.gridApi) {
                     const items:string[] = [];
                     this.gridApi.forEachNode((node:RowNode) => {
-                        items.push(node.data.ticker);
+                        items.push(node.data.symbol);
                     })
                     if (items[items.length-1] !== '')
-                        this.gridApi.applyTransaction({add:[{ticker:''}]})
+                        this.gridApi.applyTransaction({add:[{symbol:''}]})
                 }
             }
         }

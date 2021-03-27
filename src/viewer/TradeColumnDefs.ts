@@ -1,0 +1,32 @@
+export const tradeColDefs = [
+    {field:'assetType', headerName:'Asset'}, 
+    {field:'cusip', headerName:'Cusip'}, 
+    {field:'symbol', headerName:'Symbol'},
+    
+    {field:'amount', headerName:'Amount'},
+    {field:'price', headerName:'Price'},
+    {field:'cost', headerName:'Cost'},
+    {field:'accountId', headerName:'Account Id'},
+    {field:'instruction', headerName:'Instruction'},
+    
+    {field:'type', headerName:'Type'},
+    {field:'subAccount', headerName:'Sub Acc'},
+    {field:'settlementDate', headerName:'Settlement Date'},
+    {field:'orderId', headerName:'Order Id'},
+    {field:'netAmount', headerName:'Net Amt'},
+    {field:'transactionDate', headerName:'Transaction Date'},
+    {field:'orderDate', headerName:'Order Date'},
+    {field:'transactionSubType', headerName:'Trans Sub Type'},
+    {field:'transactionId', headerName:'Trans Id'},
+    {field:'cashBalanceEffectFlag', headerName:'Cash Bal Effect Flag'},
+    {field:'description', headerName:'Desc'},
+    
+    {field:'rFee', headerName:'R Fee'},
+    {field:'additionalFee', headerName:'Addnl Fee'},
+    {field:'cdscFee', headerName:'CDSC Fee'},
+    {field:'regFee', headerName:'Reg Fee'},
+    {field:'otherCharges', headerName:'Other Chgs'},
+    {field:'commission', headerName:'Commision'},
+    {field:'optRegFee', headerName:'Opt Reg Fee'},
+    {field:'secFee', headerName:'Sec Fee'},  
+]
