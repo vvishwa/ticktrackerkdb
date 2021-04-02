@@ -1,4 +1,5 @@
 system"c 20 170";
+/https://code.kx.com/q/wp/websockets/
 /* subs table to keep track of current subscriptions */
 subs:3!flip `handle`id`func`params!"iis*"$\:();
 /quote:flip `time`sym`bid`ask!"nsff"$\:();

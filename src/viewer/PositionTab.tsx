@@ -22,7 +22,9 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
     constructor(props: PositionTabProps) {
         super(props);
 
-        const flatPosition:FlattenedPosition[] = props.position.map((v) => { return {averagePrice: v.averagePrice, longQuantity: v.longQuantity, 
+        console.log('PositionTab.. ', props);
+
+        const flatPosition:FlattenedPosition[] = props.position.map((v:any) => { return {averagePrice: v.averagePrice, longQuantity: v.longQuantity, 
                 settledLongQuantity:v.settledLongQuantity, assetType: v.instrument.assetType, cusip: v.instrument.cusip, marketValue: v.marketValue, symbol:v.instrument.symbol}});
         this.state = {
             position : flatPosition
@@ -34,8 +36,8 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
     render() {
         return (
-            <div className="ag-theme-alpine" style={ {width: '95%' } } >
-                <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
+            <div className="ag-theme-alpine" style={ {width: '95%', height:'75%' } } >
+                <div className="ag-theme-alpine" style={ { height: 750, margin: '2%'} } >
                     <AgGridReact
                         rowData={this.state.position}
                         defaultColDef={this.createDefColDefs()}
@@ -69,9 +71,10 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
     createDefColDefs(): (ColDef|ColGroupDef) {
         return {
-            autoHeight: true,
+            autoHeight: false,
             resizable: true,
-            cellRenderer: 'agAnimateSlideCellRenderer'
+            filter: true,
+            //cellRenderer: 'agAnimateSlideCellRenderer'
         }
     }
 

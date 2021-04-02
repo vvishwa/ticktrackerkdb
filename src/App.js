@@ -13,6 +13,7 @@ import PositionTab from './viewer/PositionTab';
 import TradeTab from './viewer/TradeTab';
 
 import wsFuncs from './kdbchannel/Funcs';
+import BalanceTab from './viewer/BalanceTab';
 
 //import { Component } from 'react';
 
@@ -36,7 +37,8 @@ class App extends Component {
       currentTab: 'hidden',
       getQuotes_rslt:[],
       position:[],
-      trade:[]
+      trade:[],
+      positionraw:null
     }
 
     this.binder = this.binder.bind(this);
@@ -148,7 +150,11 @@ class App extends Component {
               } />
               <Route path={tabs[2]} render={(props) => 
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <PositionTab position={this.state.position}/>
+                <PositionTab position={this.state.positionraw.securitiesAccount.positions}/>
+                <BalanceTab initialBalances={this.state.positionraw.securitiesAccount.initialBalances}
+                            currentBalances={this.state.positionraw.securitiesAccount.currentBalances}
+                            projectedBalances={this.state.positionraw.securitiesAccount.projectedBalances}
+                />
               </div>
               } />
               <Route path={tabs[3]} render={(props) => 

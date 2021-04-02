@@ -4,6 +4,8 @@ import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
+//import { MenuModule } from '@ag-grid-enterprise/menu';
+
 import { FlattenedTrade, Trade } from '../dto/trade';
 import { tradeColDefs } from './TradeColumnDefs';
 
@@ -12,6 +14,7 @@ type TradeTabProps = {
 }
 
 type TradeTabState = {
+    //modules:any,
     trade:FlattenedTrade[]
 }
 
@@ -34,6 +37,7 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
             symbol: v.transactionItem.instrument.symbol, transactionDate: v.transactionDate, transactionId: v.transactionId, transactionSubType: v.transactionSubType, type: v.type
         }}):[];
         this.state = {
+            //modules: MenuModule,
             trade : flatTrade
         }
     }
@@ -46,6 +50,7 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
             <div className="ag-theme-alpine" style={ {width: '95%' } } >
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
                     <AgGridReact
+                        //modules={this.state.modules}
                         rowData={this.state.trade}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
@@ -70,8 +75,10 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
 
     createDefColDefs(): (ColDef|ColGroupDef) {
         return {
-            autoHeight: true,
+            autoHeight: false,
             resizable: true,
+            filter: true,
+            menuTabs: ['generalMenuTab', 'filterMenuTab','columnsMenuTab']
         }
     }
 
