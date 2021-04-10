@@ -43,7 +43,6 @@ wsFuncs.error = function (e) {
 wsFuncs.init = function () {
     //this.qPromise(".eod.getExpirations", this.q, [this.state.ticker, this.state.exchange]).then(this.postGetExpirations).catch(e => console.log(" Does not exist " + e).then(this.getExpirations));
     this.qPromise(".eod.getDatedDates", this.q, 0).then(this.postGetDatedDates).catch(e => console.log(" Does not exist " + e).then(this.getDatedDates));
-    this.qPromise(".eod.getTickers", this.q, 0).then(this.postGetTickers).catch(e => console.log(" Does not exist " + e).then(this.getTickers));
     this.qPromise(".sod.getPositions", this.q, 0).then(this.postGetPositions).catch(e => console.log(" Does not exist " + e).then(this.getPositions));
     this.qPromise(".sod.getTrades", this.q, 0).then(this.postGetTrades).catch(e => console.log(" Does not exist " + e).then(this.getTrades));
     this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
@@ -105,14 +104,6 @@ wsFuncs.getDatedDates = function () {
 wsFuncs.postGetDatedDates = function (datedDates) {
     console.log((datedDates + '').split(','))
     this.setState({ datedDates: (datedDates + '').split(',') });
-}
-
-wsFuncs.getTickers = function () {
-    (this.qPromise(".eod.getTickers", this.q, 0)).then(this.postGetTickers).catch(this.error)
-}
-wsFuncs.postGetTickers = function (tickers) {
-    console.log((tickers + '').split(','))
-    this.setState({ tickerList: (tickers + '').split(',') });
 }
 
 wsFuncs.postEditRow = function (data) {

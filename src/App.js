@@ -14,6 +14,8 @@ import TradeTab from './viewer/TradeTab';
 
 import wsFuncs from './kdbchannel/Funcs';
 import BalanceTab from './viewer/BalanceTab';
+import { store } from './store/store';
+import { connect } from '@giantmachines/redux-websocket';
 
 //import { Component } from 'react';
 
@@ -23,7 +25,6 @@ class App extends Component {
     this.state = {
       id: 0,
       optionIndex: 2,
-      tickerList: [],
       datedDates: [],
       expirationDates: [],
       ticker: '',
@@ -42,11 +43,11 @@ class App extends Component {
     }
 
     this.binder = this.binder.bind(this);
-    this.binder(wsFuncs);
-
+    this.binder(wsFuncs); 
   }
 
   componentDidMount() {
+    store.dispatch(connect('ws://apj:5001/'));
     this.openWS();
   }
 
@@ -126,11 +127,9 @@ class App extends Component {
               <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}><TickerPanel
                   tabChange={this.tabChange}
                   datedDates={this.state.datedDates}
-                  tickerList={this.state.tickerList}
                   expirationDates={this.state.expirationDates}
                   changeD={this.toggleDatedDates}
                   changeX={this.toggleExpirationDates}
-                  clicked={this.toggleTicker}
                   canCorrect={this.state.canCorrect}
                   fillIn={this.fillInHandler} /><h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
                   <OptionTab

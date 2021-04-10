@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
+import ExpirationListPanel from './ExpirationListPanel';
+import TickerListPanel from './TickerListPanel';
+
 import './TickPanel.css'
 
 type TickProps = {
     datedDates: any[];
-    tickerList: any[];
     expirationDates: any[];
     canCorrect:boolean;
     changeD: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
-    clicked: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     changeX: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     fillIn: (conf: string) => void;
     tabChange: () => void;
-    
 };
 
 const TickerPanel = (props: TickProps) => {
@@ -25,9 +25,7 @@ const TickerPanel = (props: TickProps) => {
     tabActive.tabChange();
 
     const dateddates = props.datedDates.map(e => { return <option key={e} value={e}>{e}</option> });
-    const tkrLabel = props.tickerList.map(e => { return <option key={e} value={e}>{e}</option> });
-    const expLabel = props.expirationDates.map((e, i) => { return <option key={i} value={i}>{e}</option> });
-
+    
     return (
         <div className="tickerPanel">
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -45,23 +43,14 @@ const TickerPanel = (props: TickProps) => {
                 <div className="tickerlist">
                     <label>Tickers</label>
                 </div>
-                <div className="tickerlist">
-                    <select onChange={props.clicked}>
-                        <option hidden value="KKK.KKK">Tickers</option>
-                        {tkrLabel}
-                    </select>
-                </div>
+                <TickerListPanel/>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div className="tickerlist">
                     <label>Expiration Dates</label>
                 </div>
-                <div className="tickerlist">
-                    <select onChange={props.changeX}>
-                        <option hidden value="2000-01-01">Call Expiring</option>
-                        {expLabel}
-                    </select>
-                </div>
+                <ExpirationListPanel />
+                
             </div>
             <div style={{ display: 'flex', flexDirection: 'column'}}>
                 <div className="tickerlist">
@@ -72,8 +61,9 @@ const TickerPanel = (props: TickProps) => {
                     <button disabled={canCorrect} onClick={() => { props.fillIn(param.conf)}}>Repeat</button>
                 </div>
             </div>
-        </div>
+        </div>        
     )
 }
 
 export default TickerPanel;
+
