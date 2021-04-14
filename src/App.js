@@ -51,16 +51,6 @@ class App extends Component {
     this.openWS();
   }
 
-  toggleTicker = (event) => {
-    console.log('Setting ticker to ', event.target.value)
-    const tmp = event.target.value.split(".")
-    this.setState({
-      ticker: tmp[0],
-      exchange: tmp[1]
-    })
-    this.getExpirations(tmp[0], tmp[1]);
-  }
-
   subscribe = (tickers) => {
     console.log('subscribing  to ', tickers)
     this.getSubscriptions(tickers);

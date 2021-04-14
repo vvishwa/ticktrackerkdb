@@ -2,54 +2,21 @@ import {types} from '../types/tickerTypes.jsx'
 
 export default function tickerReducer(state = {}, action) {
     const payload = action.payload;
-    console.log('tickerReducer ',action)
+    console.log('tickerReducer state = ', state, ', action = ',action)
     switch (action.type) {
       case types.REDUX_WEBSOCKET_MESSAGE:
-        console.log('action.payload.message', action.payload.message)
-        return funcResponse(action.payload.message)
-      case types.INIT_TICKER:
-        return {
-            tickers: [
-                initTicker(action.payload.message)
-            ]
-        };
-      case types.NEW_TICKER:
-        return {
-            tickers: [
-                ...state.tickers,
-                newTicker(state.tickers, payload.ticker)
-            ]
-        };
-      case types.DELETE_TICKER:
-        return {
-            tickers: deleteTicker(state.tickers, payload.ticker)
-        };
+        //console.log('action.payload.message', action.payload.message)
+        return funcResponse(action.payload.message, state)
       case types.SELECT_TICKER: 
         return {
-          selectedTicker: payload
+          selectedTicker: payload, ...state
         }
       default:
           return state;
     }
 }
 
-const initTicker = () => {
-  return {
-    tickers: ['AAPL', 'IBM']
-  }
-}
-
-const newTicker = (tickers, symbol) => {
-  const newTickers = tickers.push(symbol);
-  return {
-    tickers: {newTickers}
-  }
-};
-
-const deleteTicker = (tickers, symbol) => tickers.filter(f => f.symbol !== symbol);
-
-const funcResponse = (msg) => {
-  if (msg !== undefined) {
+const funcResponse = (msg, prevState) => {
     let tmp = JSON.parse(msg);
     let id = tmp[0];
     let fName = tmp[1];
@@ -59,18 +26,15 @@ const funcResponse = (msg) => {
     let retValue = undefined;
     switch(fName) {
       case '.eod.getTickers':
-        retValue = {tickerList: fArgs};
+        retValue = {tickerList: fArgs, ...prevState};
         break;
       case '.eod.getExpirations':
-        retValue = {expirations: fArgs};
+        retValue = {expirations: fArgs, ...prevState};
         break;
       default:
-        retValue = undefined;
+        retValue = {...prevState};
         break;
     }
     console.log('tickerReducer.funcResponse return value ', retValue);
     return retValue;
-  } else {
-      return  {none: []}
-  }
 }

@@ -19,23 +19,6 @@ wsFuncs.qPromise = function (func, q, obj) {
     })
 };
 
-wsFuncs.formatDate = function (i, d) {
-    if (d === undefined) {
-        d = new Date();
-    } else {
-        d = new Date(d);
-    };
-    wsFuncs.setDate(wsFuncs.getDate() + (i * 7));
-    var month = wsFuncs.getMonth();
-    var year = wsFuncs.getFullYear();
-    const monthNames = ["January", "February", "March",
-        "April", "May", "June", "July",
-        "August", "September", "October",
-        "November", "December"
-    ];
-    return monthNames[month] + ' ' + year;
-};
-
 wsFuncs.error = function (e) {
     alert("Failed due to: " + e)
 }
@@ -55,14 +38,6 @@ wsFuncs.postGetOption = function (ot) {
     console.log("func.wsFuncs.postGetOption optionTable " + ot.length)
     //let optionMessage = "";
     this.setState({ optionTable: ot });
-}
-
-wsFuncs.getExpirations = function (ticker, exchange) {
-    (this.qPromise(".eod.getExpirations", this.q, [ticker, exchange])).then(this.postGetExpirations).catch(this.error)
-}
-wsFuncs.postGetExpirations = function (expirationDates) {
-    console.log((expirationDates + '').split(','))
-    this.setState({ expirationDates: (expirationDates + '').split(',') });
 }
 
 wsFuncs.getSubscriptions = function (tickers) {

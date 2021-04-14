@@ -31,13 +31,6 @@ class TickerListPanel extends Component<TickProps, TickerState> {
         store.dispatch(send({ id:12345, func:'.eod.getTickers', obj:0.0 }));
     }
 
-    componentDidUpdate(prevProps:TickProps) {
-        console.log('TickerListPanel componentDidUpdate prevProps ', prevProps);
-        if (prevProps.tickerList.length > 0) {
-            this.setState({tickerList: prevProps.tickerList})
-        }
-    }
-
     onClickHandler(e:any) {
         const tickerSelected = e.target.value;
         console.log('TickerListPanel tickerSelected ', tickerSelected);

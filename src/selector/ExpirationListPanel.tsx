@@ -8,40 +8,16 @@ import { send } from '@giantmachines/redux-websocket';
 type ExpirationProps = {
     selectedTicker: string;
     expirationDates: any[];
-    //changeX: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     actions: typeof actions;
 };
 
-type ExpirationState = {
-    selectedTicker: any;
-    expirationDates: any[];
-}
 
-class ExpirationListPanel extends Component<ExpirationProps, ExpirationState> {
+class ExpirationListPanel extends Component<ExpirationProps> {
 
     constructor(props: ExpirationProps | Readonly<ExpirationProps>) {
         super(props);
 
-        this.state = {
-            selectedTicker:{symbol:''},
-            expirationDates: []
-        }
         this.onClickHandler = this.onClickHandler.bind(this);
-    }
-
-    componentDidUpdate(prevProps: ExpirationProps) {
-        
-        console.log('ExpirationListPanel.componentDidUpdate prevProps', prevProps);
-        console.log('ExpirationListPanel.componentDidUpdate this.state', this.state);
-
-        if (prevProps !== undefined) {
-            if (prevProps.expirationDates !== undefined && this.state.expirationDates === null) {
-                this.setState({expirationDates: prevProps.expirationDates})
-            } else if (prevProps.selectedTicker !== undefined && this.state.selectedTicker === null) {
-                this.setState({selectedTicker: prevProps.selectedTicker})
-            }
-        }
-        
     }
 
     onClickHandler(e:any) {
@@ -49,16 +25,15 @@ class ExpirationListPanel extends Component<ExpirationProps, ExpirationState> {
         
         const expirationDateSelected = e.target.value;
         console.log('ExpirationListPanel expirationDateSelected ', expirationDateSelected);
-        console.log('ExpirationListPanel this.state ', this.state);
-        let tmp:string[] = this.state.selectedTicker.symbol.split('.');
+        console.log('ExpirationListPanel this.props ', this.props);
+        let tmp:string[] = this.props.selectedTicker.split('.');
 
-        //.eod.getOption["2021-01-08";"AAPL";"US";enlist "6"]
-        store.dispatch(send({ id:123456, func:'.eod.getOption', obj:['AAPL', 'US'], expirationDateSelected}));
+        store.dispatch(send({ id:123456, func:'.eod.getOption', obj:['2020-12-02',tmp[0], tmp[1], expirationDateSelected]}));
     }
 
     render() {
-        const expLabel = this.props.expirationDates !== undefined? this.props.expirationDates.map((e, i) => { return <option key={i} value={i}>{e}</option> }):
-        this.state.expirationDates !== undefined? this.state.expirationDates.map((e, i) => { return <option key={i} value={i}>{e}</option> }) : <option></option>;
+        const expLabel = this.props.expirationDates !== undefined? this.props.expirationDates.map((e, i) => { return <option key={i} value={i}>{e}</option> }): <option></option>;
+        //this.state.expirationDates !== undefined? this.state.expirationDates.map((e, i) => { return <option key={i} value={i}>{e}</option> }) : <option></option>;
 
         return (
             <div className="tickerlist">
@@ -74,15 +49,17 @@ class ExpirationListPanel extends Component<ExpirationProps, ExpirationState> {
 const mapStateToProps = (state:any) => {
     
     console.log('ExpirationListPanel.mapStateToProps ', state);
+    let retValue = {expirationDates: [], selectedTicker:''}
     if (state !== undefined) {
       if (state.expirations !== undefined) {
-        return  {expirationDates: state.expirations};
-      } else if (state.selectedTicker !== undefined) {
-        return {selectedTicker: state.selectedTicker}
+        retValue = {...retValue, expirationDates: state.expirations}
+      } 
+      if (state.selectedTicker !== undefined) {
+        retValue = {...retValue, selectedTicker: state.selectedTicker.symbol}
       }
-    } else {
-      return  {expirationDates: [], selectedTicker:''};
     }
+
+    return retValue;
 };
 
 const mapDispatchToProps = (dispatch: any) => {
