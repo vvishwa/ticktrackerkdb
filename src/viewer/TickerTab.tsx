@@ -7,11 +7,10 @@ import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, Gri
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
-import { connect, send } from '@giantmachines/redux-websocket';
-import { v1 as uuidv1 } from 'uuid';
+import { connect as wsconnect, send } from '@giantmachines/redux-websocket';
+import { connect } from 'react-redux';
 
 type TickerTabProps = {
-    subsHandler: (conf: string) => void;
     getQuotes_rslt:Quote[];
 };
 
@@ -38,7 +37,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
 
     componentDidMount() {
-        rtstore.dispatch(connect('ws://apj:5001/'));
+        rtstore.dispatch(wsconnect('ws://apj:5001/'));
     }
 
     clickToSubscribe = (e:any) => {
@@ -53,8 +52,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
             console.log('ll = ', ll)
             this.setState({tickerList: ll})
-            this.props.subsHandler(ll);
-            //rtstore.dispatch(send({ id:uuidv1(), func:'.rt.subscribe', obj:[...ll]}));
+            rtstore.dispatch(send({ id:Date.now(), func:'.rt.subscribe', obj:[...ll]}));
         }
     } 
 
@@ -116,4 +114,17 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     }
 };
 
-export default TickerTab;
+const mapStateToProps = (state:any) => {
+    console.log('TickerTab.mapStateToProps ', state);
+    let retValue = {getQuotes_rslt: []}
+    if (state !== undefined) {
+      if (state.rtResponse !== undefined && state.rtResponse.result !== undefined) {
+        retValue = {getQuotes_rslt: state.rtResponse.result}
+      } 
+    }
+
+    return retValue;
+}
+
+// connect our component to the redux store
+export default connect(mapStateToProps)(TickerTab);

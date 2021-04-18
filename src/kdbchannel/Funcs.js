@@ -28,14 +28,6 @@ wsFuncs.init = function () {
     this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
 }
 
-wsFuncs.getSubscriptions = function (tickers) {
-    (this.qPromise(".rt.subscribe", this.q, [...tickers])).then(this.postGetSubscriptions).catch(this.error)
-}
-wsFuncs.postGetSubscriptions = function (tickers) {
-    console.log(( tickers + '').split(','))
-    this.setState({ subscription: (tickers + '').split(',') });
-}
-
 wsFuncs.getPositions = function () {
     (this.qPromise(".sod.getPositions", this.q, 0)).then(this.postGetPositions).catch(this.error)
 }

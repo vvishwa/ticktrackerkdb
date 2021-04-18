@@ -24,8 +24,8 @@ const funcResponse = (msg, prevState) => {
     
     let retValue = undefined;
     switch(fName) {
-      case '.rt.subscribe':
-        retValue = {...prevState, datedList:fArgs, };
+      case 'getQuotes':
+        retValue = {rtResponse:fArgs };
         break;
       default:
         retValue = {...prevState};

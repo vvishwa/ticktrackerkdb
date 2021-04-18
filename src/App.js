@@ -24,12 +24,10 @@ class App extends Component {
     super(props);
     this.state = {
       id: 0,
-      subscription: [],
       fillConfidencePerc: 0,
       canCorrect:false,
       isNight: false,
       currentTab: 'hidden',
-      getQuotes_rslt:[],
       position:[],
       positionraw:null
     }
@@ -42,11 +40,6 @@ class App extends Component {
   componentDidMount() {
     store.dispatch(connect('ws://apj:5001/'));
     this.openWS();
-  }
-
-  subscribe = (tickers) => {
-    console.log('subscribing  to ', tickers)
-    this.getSubscriptions(tickers);
   }
 
   fillInHandler = (val) => {
@@ -109,10 +102,7 @@ class App extends Component {
               <Route path={tabs[1]} render={(props) => 
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Provider store={rtstore}>
-                  <TickerTab
-                      subsHandler={this.subscribe}
-                      getQuotes_rslt={this.state.getQuotes_rslt}
-                    />
+                  <TickerTab/>
                 </Provider>
               </div>
               } />
