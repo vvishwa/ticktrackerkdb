@@ -6,6 +6,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
+import { rtstore } from '../store/rtstore';
+import { connect, send } from '@giantmachines/redux-websocket';
+import { v1 as uuidv1 } from 'uuid';
 
 type TickerTabProps = {
     subsHandler: (conf: string) => void;
@@ -33,6 +36,11 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
 
+
+    componentDidMount() {
+        rtstore.dispatch(connect('ws://apj:5001/'));
+    }
+
     clickToSubscribe = (e:any) => {
         if (this.gridApi) {
             const tickerList:any = [];
@@ -46,6 +54,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
             console.log('ll = ', ll)
             this.setState({tickerList: ll})
             this.props.subsHandler(ll);
+            //rtstore.dispatch(send({ id:uuidv1(), func:'.rt.subscribe', obj:[...ll]}));
         }
     } 
 

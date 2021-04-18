@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { actions } from '../actions/tickerActions';
 import { store } from '../store/store';
 import { send } from '@giantmachines/redux-websocket';
+import { v1 as uuidv1 } from 'uuid';
 
 type TickProps = {
     tickerList: any[];
@@ -28,7 +29,7 @@ class TickerListPanel extends Component<TickProps, TickerState> {
     }
 
     componentDidMount() {
-        store.dispatch(send({ id:12345, func:'.eod.getTickers', obj:0.0 }));
+        store.dispatch(send({ id:uuidv1(), func:'.eod.getTickers', obj:0.0 }));
     }
 
     onClickHandler(e:any) {
@@ -40,7 +41,7 @@ class TickerListPanel extends Component<TickProps, TickerState> {
         this.props.actions.selectTicker(tickerSelected);
 
         const tmp:string[] = tickerSelected.split(".");
-        store.dispatch(send({ id:123455, func:'.eod.getExpirations', obj:[tmp[0], tmp[1]] }));
+        store.dispatch(send({ id:uuidv1(), func:'.eod.getExpirations', obj:[tmp[0], tmp[1]] }));
     }
 
     render() {

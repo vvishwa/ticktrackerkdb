@@ -1,19 +1,29 @@
 import {types} from '../types/tickerTypes.jsx'
 
 export default function tickerReducer(state = {}, action) {
-    const payload = action.payload;
-    console.log('tickerReducer state = ', state, ', action = ',action)
+    const payload = {...action.payload};
+    let finalState = {...state}
     switch (action.type) {
       case types.REDUX_WEBSOCKET_MESSAGE:
-        //console.log('action.payload.message', action.payload.message)
-        return funcResponse(action.payload.message, state)
+        finalState = funcResponse(action.payload.message, state)
+        break;
       case types.SELECT_TICKER: 
-        return {
-          selectedTicker: payload, ...state
+        finalState = {
+          ...state, selectedTicker: payload
         }
+        break;
+      case types.SELECT_DATED: 
+        finalState = {
+          ...state, selectedDatedDate: payload
+        }
+        break;
       default:
-          return state;
+        console.log('tickerReducer:DEFAULT occur')
+        finalState = {...state};
     }
+
+    console.log('tickerReducer state = ', finalState, ', action = ',action)
+    return finalState
 }
 
 const funcResponse = (msg, prevState) => {
@@ -25,11 +35,20 @@ const funcResponse = (msg, prevState) => {
     
     let retValue = undefined;
     switch(fName) {
+      case '.eod.getDatedDates':
+        retValue = {...prevState, datedList:fArgs, };
+        break;
       case '.eod.getTickers':
-        retValue = {tickerList: fArgs, ...prevState};
+        retValue = {...prevState, tickerList: fArgs, };
         break;
       case '.eod.getExpirations':
-        retValue = {expirations: fArgs, ...prevState};
+        retValue = {...prevState, expirations: fArgs, };
+        break;
+      case '.eod.getOption':
+        retValue = {...prevState, options: fArgs, };
+        break;
+      case '.sod.getTrades':
+        retValue = {...prevState, trades: fArgs, };
         break;
       default:
         retValue = {...prevState};

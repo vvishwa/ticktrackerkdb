@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DatedListPanel from './DatedListPanel';
 import ExpirationListPanel from './ExpirationListPanel';
 import TickerListPanel from './TickerListPanel';
 
@@ -6,10 +7,8 @@ import './TickPanel.css'
 
 type TickProps = {
     datedDates: any[];
-    expirationDates: any[];
     canCorrect:boolean;
     changeD: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
-    changeX: ((event: React.ChangeEvent<HTMLSelectElement>) => void) | undefined;
     fillIn: (conf: string) => void;
     tabChange: () => void;
 };
@@ -24,7 +23,7 @@ const TickerPanel = (props: TickProps) => {
     const [tabActive] = useState(props);
     tabActive.tabChange();
 
-    const dateddates = props.datedDates.map(e => { return <option key={e} value={e}>{e}</option> });
+    //const dateddates = props.datedDates.map(e => { return <option key={e} value={e}>{e}</option> });
     
     return (
         <div className="tickerPanel">
@@ -32,12 +31,7 @@ const TickerPanel = (props: TickProps) => {
                 <div className="tickerlist">
                     <label>Dated Dates</label>
                 </div>
-                <div className="tickerlist">
-                    <select onChange={props.changeD}>
-                        <option hidden value="2000-01-01">Feed Date</option>
-                        {dateddates}
-                    </select>
-                </div>
+                <DatedListPanel/>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div className="tickerlist">

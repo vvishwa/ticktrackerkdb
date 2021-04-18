@@ -24,20 +24,8 @@ wsFuncs.error = function (e) {
 }
 
 wsFuncs.init = function () {
-    //this.qPromise(".eod.getExpirations", this.q, [this.state.ticker, this.state.exchange]).then(this.postGetExpirations).catch(e => console.log(" Does not exist " + e).then(this.getExpirations));
-    this.qPromise(".eod.getDatedDates", this.q, 0).then(this.postGetDatedDates).catch(e => console.log(" Does not exist " + e).then(this.getDatedDates));
     this.qPromise(".sod.getPositions", this.q, 0).then(this.postGetPositions).catch(e => console.log(" Does not exist " + e).then(this.getPositions));
-    this.qPromise(".sod.getTrades", this.q, 0).then(this.postGetTrades).catch(e => console.log(" Does not exist " + e).then(this.getTrades));
     this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
-}
-
-wsFuncs.getOption = function (indexDate, ticker, exchange, optionIndex) {
-    (this.qPromise(".eod.getOption", this.q, [indexDate, ticker, exchange, optionIndex])).then(this.postGetOption).catch(this.error)
-}
-wsFuncs.postGetOption = function (ot) {
-    console.log("func.wsFuncs.postGetOption optionTable " + ot.length)
-    //let optionMessage = "";
-    this.setState({ optionTable: ot });
 }
 
 wsFuncs.getSubscriptions = function (tickers) {
@@ -65,22 +53,6 @@ wsFuncs.postGetPositionRaw = function (tabs) {
     this.setState({ positionraw: tabs });
 }
 
-wsFuncs.getTrades = function () {
-    (this.qPromise(".sod.getTrades", this.q, 0)).then(this.postGetTrades).catch(this.error)
-}
-wsFuncs.postGetTrades = function (tabs) {
-    console.log('postGetTrades.', tabs)
-    this.setState({ trade: tabs });
-}
-
-wsFuncs.getDatedDates = function () {
-    (this.qPromise(".eod.getDatedDates", this.q, 0)).then(this.postGetExpirations).catch(this.error)
-}
-wsFuncs.postGetDatedDates = function (datedDates) {
-    console.log((datedDates + '').split(','))
-    this.setState({ datedDates: (datedDates + '').split(',') });
-}
-
 wsFuncs.postEditRow = function (data) {
     this.state.edit = undefined;
 }
@@ -94,14 +66,6 @@ wsFuncs.updateCSS = function () {
     this.setState({ isNight });
     let bg = isNight ? '#121212f5' : 'white';
     document.body.style.backgroundColor = bg;
-}
-
-wsFuncs.tabChange = function(){
-    let currentTab=window.location.pathname;
-    //Don't display the scrollbar for the calendar
-    let scroll = (currentTab==='/') ? 'hidden' : 'initial';
-    document.body.style.overflow = scroll;
-    this.setState({currentTab})
 }
 
 export default wsFuncs

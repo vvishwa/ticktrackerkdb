@@ -16,21 +16,14 @@ import wsFuncs from './kdbchannel/Funcs';
 import BalanceTab from './viewer/BalanceTab';
 import { store } from './store/store';
 import { connect } from '@giantmachines/redux-websocket';
-
-//import { Component } from 'react';
+import { rtstore } from './store/rtstore';
+import { Provider } from 'react-redux';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       id: 0,
-      optionIndex: 2,
-      datedDates: [],
-      expirationDates: [],
-      ticker: '',
-      exchange: '',
-      datedDate: '',
-      optionTable: [],
       subscription: [],
       fillConfidencePerc: 0,
       canCorrect:false,
@@ -38,12 +31,12 @@ class App extends Component {
       currentTab: 'hidden',
       getQuotes_rslt:[],
       position:[],
-      trade:[],
       positionraw:null
     }
 
     this.binder = this.binder.bind(this);
     this.binder(wsFuncs); 
+    this.tabChange = this.tabChange.bind(this);
   }
 
   componentDidMount() {
@@ -54,22 +47,6 @@ class App extends Component {
   subscribe = (tickers) => {
     console.log('subscribing  to ', tickers)
     this.getSubscriptions(tickers);
-  }
-
-  toggleDatedDates = (event) => {
-    console.log('Setting dated date to ', event.target.value)
-    this.setState({
-      datedDate: event.target.value
-    })
-  }
-
-  toggleExpirationDates = (event) => {
-    const dateIndex = event.target.value
-    console.log('Setting expiration date index to ', dateIndex)
-    this.setState({
-      optionIndex: event.target.value
-    })
-    this.getOption(this.state.datedDate, this.state.ticker, this.state.exchange, dateIndex);
   }
 
   fillInHandler = (val) => {
@@ -91,12 +68,17 @@ class App extends Component {
     }
   }
 
+  tabChange = () => {
+    let currentTab=window.location.pathname;
+    this.setState({currentTab: currentTab})
+  }
+
   render() {
     let slider = (<label className="switch">
       <input type="checkbox" checked={this.state.isNight} onChange={this.updateCSS} />
       <span className="slider round"></span>
     </label>);
-    let tabs = ["/OptionTab", "/TickerTab", "/PostionTab", "/TradeTab"];
+    let tabs = ["/", "/TickerTab", "/PostionTab", "/TradeTab"];
     return (
       <div className={this.state.isNight ? 'nightMode' : 'dayMode'}>
         <Router>
@@ -116,25 +98,22 @@ class App extends Component {
               <Route exact path={tabs[0]} render={(props) => 
               <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}><TickerPanel
                   tabChange={this.tabChange}
-                  datedDates={this.state.datedDates}
-                  expirationDates={this.state.expirationDates}
-                  changeD={this.toggleDatedDates}
-                  changeX={this.toggleExpirationDates}
                   canCorrect={this.state.canCorrect}
                   fillIn={this.fillInHandler} /><h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
                   <OptionTab
                     tabChange={this.tabChange}
-                    optionTable={this.state.optionTable}
                     fillValue={this.state.fillConfidencePerc}
                     enableCorrection={this.enableCorrectionHandler} /></div>
               }
               />
               <Route path={tabs[1]} render={(props) => 
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <TickerTab
-                  subsHandler={this.subscribe}
-                  getQuotes_rslt={this.state.getQuotes_rslt}
-                />
+                <Provider store={rtstore}>
+                  <TickerTab
+                      subsHandler={this.subscribe}
+                      getQuotes_rslt={this.state.getQuotes_rslt}
+                    />
+                </Provider>
               </div>
               } />
               <Route path={tabs[2]} render={(props) => 
@@ -148,7 +127,7 @@ class App extends Component {
               } />
               <Route path={tabs[3]} render={(props) => 
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <TradeTab trade={this.state.trade}/>
+                <TradeTab />
               </div>
               } />
             </Switch>
@@ -210,7 +189,6 @@ class App extends Component {
 
     if (fArgs['func'] !== null && fArgs['func'] === 'getQuotes') {
       if (fArgs['result'] !== null) {
-        //console.log('getQuotes is non empty ', fArgs['result']);
 
         const getQuotes_rslt = fArgs['result'].map((r)=> {
           return r;

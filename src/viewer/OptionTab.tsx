@@ -7,6 +7,7 @@ import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 
 import { AgChartsReact } from 'ag-charts-react';
 import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
+import { connect } from 'react-redux';
 
 
 const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function, enableCorrection:Function}) => {
@@ -203,4 +204,22 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
 
 };
 
-export default OptionTab;
+
+const mapStateToProps = (state:any) => {
+    console.log('OptionTab.mapStateToProps ', state);
+    if (state !== undefined && state.options !== undefined) {
+        return  {optionTable: state.options};
+    } else {
+        return  {optionTable: []};
+    }
+};
+
+
+// connect our component to the redux store
+export default connect(
+    mapStateToProps,
+    null,
+    null,
+    { forwardRef: true } // must be supplied for react/redux when using AgGridReact
+)(OptionTab);
+

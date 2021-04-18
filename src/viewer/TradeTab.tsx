@@ -5,42 +5,41 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 //import { MenuModule } from '@ag-grid-enterprise/menu';
+import { store } from '../store/store';
+import { send } from '@giantmachines/redux-websocket';
+import { v1 as uuidv1 } from 'uuid';
 
 import { FlattenedTrade, Trade } from '../dto/trade';
 import { tradeColDefs } from './TradeColumnDefs';
+import { connect } from 'react-redux';
 
 type TradeTabProps = {
     trade:Trade[]
 }
 
-type TradeTabState = {
-    //modules:any,
-    trade:FlattenedTrade[]
-}
-
-class TradeTab extends Component<TradeTabProps, TradeTabState> {
+class TradeTab extends Component<TradeTabProps> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
     
-    constructor(props: TradeTabProps) {
-        super(props);
-
-        console.log('TradeTab.props ', props)
-
-        const flatTrade:FlattenedTrade[] = props.trade.length !==0? props.trade.map((v) => { return {
-            accountId: v.transactionItem.accountId, additionalFee: v.fees.additionalFee, amount: v.transactionItem.amount, assetType: v.transactionItem.instrument.assetType,
-            cashBalanceEffectFlag: v.cashBalanceEffectFlag, cdscFee: v.fees.cdscFee, commission: v.fees.commission, cost: v.transactionItem.cost, 
-            cusip: v.transactionItem.instrument.cusip, description: v.description, instruction: v.transactionItem.instruction, netAmount: v.netAmount,
-            optRegFee: v.fees.optRegFee, orderDate: v.orderDate, orderId: v.orderId, otherCharges: v.fees.otherCharges, price: v.transactionItem.price,
-            rFee: v.fees.rFee, regFee: v.fees.regFee, secFee: v.fees.secFee, settlementDate: v.settlementDate, subAccount: v.subAccount, 
-            symbol: v.transactionItem.instrument.symbol, transactionDate: v.transactionDate, transactionId: v.transactionId, transactionSubType: v.transactionSubType, type: v.type
-        }}):[];
-        this.state = {
-            //modules: MenuModule,
-            trade : flatTrade
-        }
+    
+    private flattendTrade(props: TradeTabProps): FlattenedTrade[] {
+        return props.trade.length !== 0 ? props.trade.map((v) => {
+            return {
+                accountId: v.transactionItem.accountId, additionalFee: v.fees.additionalFee, amount: v.transactionItem.amount, assetType: v.transactionItem.instrument.assetType,
+                cashBalanceEffectFlag: v.cashBalanceEffectFlag, cdscFee: v.fees.cdscFee, commission: v.fees.commission, cost: v.transactionItem.cost,
+                cusip: v.transactionItem.instrument.cusip, description: v.description, instruction: v.transactionItem.instruction, netAmount: v.netAmount,
+                optRegFee: v.fees.optRegFee, orderDate: v.orderDate, orderId: v.orderId, otherCharges: v.fees.otherCharges, price: v.transactionItem.price,
+                rFee: v.fees.rFee, regFee: v.fees.regFee, secFee: v.fees.secFee, settlementDate: v.settlementDate, subAccount: v.subAccount,
+                symbol: v.transactionItem.instrument.symbol, transactionDate: v.transactionDate, transactionId: v.transactionId, transactionSubType: v.transactionSubType, type: v.type
+            };
+        }) : [];
     }
+
+    componentDidMount() {
+        store.dispatch(send({ id:uuidv1(), func:'.sod.getTrades', obj:0}));
+    }
+
     componentDidUpdate(prevProps:TradeTabProps) {
         console.log('props received ', prevProps);
     }
@@ -51,7 +50,7 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
                     <AgGridReact
                         //modules={this.state.modules}
-                        rowData={this.state.trade}
+                        rowData={this.flattendTrade(this.props)}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
                         getRowNodeId={(n:FlattenedTrade) =>{return n.symbol}}
@@ -90,4 +89,17 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
     
 };
 
-export default TradeTab;
+const mapStateToProps = (state:any) => {
+    
+    console.log('TradeTab.mapStateToProps ', state);
+    let retValue = {trade: []}
+    if (state !== undefined) {
+      if (state.trades !== undefined) {
+        retValue = {trade: state.trades}
+      }
+    }
+
+    return retValue;
+};
+
+export default connect(mapStateToProps)(TradeTab);
