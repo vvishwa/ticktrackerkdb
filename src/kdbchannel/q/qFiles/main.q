@@ -40,10 +40,11 @@ prepSproc:{[x]
 .z.wc: {delete from `subs where handle=x};
  /*subscribe to something */
 .rt.subscribe:{
+ rh:neg hopen `:localhost:5002
  x:.j.k x;
  fname:`getQuotes;
  id:x`id;
- arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg)};
+ arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg);(neg rh)(insert; `tickers; (arg; arg))};
 
 getQuotes:{
   filter:$[all raze null x;distinct quote`symbol;raze x];
