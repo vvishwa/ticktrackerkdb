@@ -50,6 +50,10 @@ show lotdir
  positions:select averagePrice,longQuantity,settledLongQuantity,instrument,marketValue from positionsraw[`securitiesAccount;`positions];
  positions}
 
+.sod.getPositionRaw:{
+ positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
+ positionsraw}
+
 .sod.getTrades:{
  trades:.j.k raze read0 `$"/home/vijay/td/transaction.json";
  select from trades
