@@ -51,7 +51,14 @@ show lotdir
  positions}
 
 .sod.getPositionRaw:{
- positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
+ /positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
+ .req.def["Content-Type"]:"application/x-www-form-urlencoded";
+ refresh_token_encoded:system "echo $TD_REFRESH_TOKEN_ENCODED";
+ oauth2_payload:"grant_type=refresh_token&refresh_token=",refresh_token_encoded[0],"&access_type=&code=&client_id=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&redirect_uri=";
+ access_dict:.req.post["https://api.tdameritrade.com/v1/oauth2/token";()!();oauth2_payload];
+ refreshed_access_token:access_dict[`access_token];
+ .req.def["Authorization"]:"Bearer ",refreshed_access_token;
+ positionsraw:.req.get["https://api.tdameritrade.com/v1/accounts/489682556?fields=positions";()!()];
  positionsraw}
 
 .sod.getTrades:{
