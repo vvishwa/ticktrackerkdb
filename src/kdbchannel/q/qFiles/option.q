@@ -52,8 +52,8 @@ show lotdir
 
 .sod.getPositionRaw:{
  /positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
- .req.def["Authorization"]:0n
  .req.def["Content-Type"]:"application/x-www-form-urlencoded";
+ .req.def:enlist ["Authorization"] _ .req.def;
  refresh_token_encoded:system "echo $TD_REFRESH_TOKEN_ENCODED";
  oauth2_payload:"grant_type=refresh_token&refresh_token=",refresh_token_encoded[0],"&access_type=&code=&client_id=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&redirect_uri=";
  access_dict:.req.post["https://api.tdameritrade.com/v1/oauth2/token";()!();oauth2_payload];
