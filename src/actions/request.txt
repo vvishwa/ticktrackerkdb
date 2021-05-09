@@ -1,0 +1,64 @@
+var request = {
+    "requests": [
+            {
+                "service": "ADMIN",
+                "command": "LOGIN",
+                "requestid": 0,
+                "account": userPrincipalsResponse.accounts[0].accountId,
+                "source": userPrincipalsResponse.streamerInfo.appId,
+                "parameters": {
+                    "credential": jsonToQueryString(credentials),
+                    "token": userPrincipalsResponse.streamerInfo.token,
+                    "version": "1.0"
+                }
+            }
+    ]
+}
+
+var request = {
+    "requests": [
+        {
+            "service": "NEWS_HEADLINE", 
+            "requestid": "2", 
+            "command": "SUBS", 
+            "account": userPrincipalsResponse.accounts[0].accountId,
+            "source": userPrincipalsResponse.streamerInfo.appId,
+            "parameters": {
+                "keys": "GOOG,AAPL", 
+                "fields": "0,1,2,3,4"
+            }
+        }
+    ]
+}
+
+var request = {
+    "requests": [
+        {
+            "service": "QUOTE",
+            "requestid": "2",
+            "command": "SUBS",
+            "account": userPrincipalsResponse.accounts[0].accountId,
+            "source": userPrincipalsResponse.streamerInfo.appId,
+            "parameters": {
+                "keys": "AAPL,MSFT",
+                "fields": "0,1,2,3,4,5,6,7,8"
+            }
+        }
+    ]
+}
+
+var request = {
+    "requests": [
+        {
+            "service": "OPTION",
+            "requestid": "3",
+            "command": "SUBS",
+            "account": userPrincipalsResponse.accounts[0].accountId,
+            "source": userPrincipalsResponse.streamerInfo.appId,
+            "parameters": {
+                "keys": "AAPL_051421P129",
+                "fields": "0,1,2,3,4,5,6,7,8"
+            }
+        }
+    ]
+}
