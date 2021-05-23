@@ -50,6 +50,9 @@ const funcResponse = (msg, prevState) => {
       case '.sod.getTrades':
         retValue = {...prevState, trades: fArgs, };
         break;
+      case '.sod.getUserPrincipal':
+        retValue = {...prevState, userPrincipals: fArgs, };
+        break;
       default:
         retValue = {...prevState};
         break;
