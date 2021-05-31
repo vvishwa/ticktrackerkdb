@@ -5,6 +5,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { InitialBalance, CurrentBalance, ProjectedBalances } from '../dto/PositionAndBalance';
+import {connect} from "react-redux";
 
 type BalanceTabProps = {
     initialBalances:InitialBalance,
@@ -12,11 +13,7 @@ type BalanceTabProps = {
     projectedBalances:ProjectedBalances
 }
 
-type BalanceTabState = {
-    balance:any[2]
-}
-
-class BalanceTab extends Component<BalanceTabProps, BalanceTabState> {
+class BalanceTab extends Component<BalanceTabProps> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
@@ -26,24 +23,23 @@ class BalanceTab extends Component<BalanceTabProps, BalanceTabState> {
 
         console.log('BalanceTab.props ', props);
 
-        this.state = {
-            balance: [2]
-        }
-        this.state.balance[0] = props.currentBalances;
-        this.state.balance[0]['balanceType'] = 'Current';
-        this.state.balance[1] = props.initialBalances;
-        this.state.balance[1]['balanceType'] = 'Initial';
     }
     componentDidUpdate(prevProps:BalanceTabProps) {
         console.log('props received ', prevProps);
     }
 
     render() {
+        const balance = []
+        if (this.props.initialBalances !== undefined && this.props.initialBalances !== undefined) {
+            balance.push({...this.props.currentBalances, balanceType:'Current'});
+            balance.push({...this.props.initialBalances, balanceType:'Initial'});
+        }
+
         return (
             <div className="ag-theme-alpine" style={ {width: '95%', height:'100%' } } >
                 <div className="ag-theme-alpine" style={ { height: 140, margin: '2%'} } >
                     <AgGridReact
-                        rowData={this.state.balance}
+                        rowData={balance}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
                         getRowNodeId={(n:any) =>{return n.balanceType}}
@@ -106,4 +102,12 @@ class BalanceTab extends Component<BalanceTabProps, BalanceTabState> {
     
 };
 
-export default BalanceTab;
+const mapStateToProps = (state:any) => {
+    let retValue = {initialBalances: state.securitiesAccount !== undefined? state.securitiesAccount.initialBalances:undefined,
+        currentBalances: state.securitiesAccount !== undefined? state.securitiesAccount.currentBalances:undefined,
+        projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:undefined}
+    console.log('BalanceTab.mapStateToProps retValue', retValue);
+    return retValue;
+};
+
+export default connect(mapStateToProps)(BalanceTab);

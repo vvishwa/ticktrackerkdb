@@ -28,8 +28,6 @@ class App extends Component {
       canCorrect:false,
       isNight: false,
       currentTab: 'hidden',
-      position:[],
-      positionraw:null
     }
 
     this.binder = this.binder.bind(this);
@@ -108,11 +106,8 @@ class App extends Component {
               } />
               <Route path={tabs[2]} render={(props) => 
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <PositionTab position={this.state.positionraw.securitiesAccount.positions}/>
-                <BalanceTab initialBalances={this.state.positionraw.securitiesAccount.initialBalances}
-                            currentBalances={this.state.positionraw.securitiesAccount.currentBalances}
-                            projectedBalances={this.state.positionraw.securitiesAccount.projectedBalances}
-                />
+                <PositionTab />
+                <BalanceTab />
               </div>
               } />
               <Route path={tabs[3]} render={(props) => 

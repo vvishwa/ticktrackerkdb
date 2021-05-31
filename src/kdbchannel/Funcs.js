@@ -24,8 +24,8 @@ wsFuncs.error = function (e) {
 }
 
 wsFuncs.init = function () {
-    this.qPromise(".sod.getPositions", this.q, 0).then(this.postGetPositions).catch(e => console.log(" Does not exist " + e).then(this.getPositions));
-    this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
+    //this.qPromise(".sod.getPositions", this.q, 0).then(this.postGetPositions).catch(e => console.log(" Does not exist " + e).then(this.getPositions));
+    //this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
 }
 
 wsFuncs.getPositions = function () {

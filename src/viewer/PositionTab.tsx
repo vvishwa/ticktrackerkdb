@@ -15,11 +15,7 @@ type PositionTabProps = {
     userPrincipals:any
 }
 
-type PositionTabState = {
-    position:FlattenedPosition[]
-}
-
-class PositionTab extends Component<PositionTabProps, PositionTabState> {
+class PositionTab extends Component<PositionTabProps> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
@@ -29,15 +25,12 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
         console.log('PositionTab.. ', props);
 
-        const flatPosition:FlattenedPosition[] = props.position.map((v:any) => { return {averagePrice: v.averagePrice, longQuantity: v.longQuantity, 
-                settledLongQuantity:v.settledLongQuantity, assetType: v.instrument.assetType, cusip: v.instrument.cusip, marketValue: v.marketValue, symbol:v.instrument.symbol}});
-        this.state = {
-            position : flatPosition
-        }
     }
 
     componentDidUpdate(prevProps:PositionTabProps) {
-        console.log('props received ', prevProps);
+        console.log('prevProps received ', prevProps);
+        //store.dispatch(send({ id:uuidv1(), func:'.sod.getUserPrincipal', obj:0}));
+
         if (prevProps.userPrincipals !== undefined) {
             //Converts ISO-8601 response in snapshot to ms since epoch accepted by Streamer
             let userPrincipalsResponse = prevProps.userPrincipals;
@@ -75,7 +68,7 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
                 ]
             }
 
-            if (this.state.position !== undefined) {
+            if (this.props.position !== undefined) {
                 const websocketUrl = "wss://" + userPrincipalsResponse.streamerInfo.streamerSocketUrl + "/ws";
                 //var mySock = new WebSocket(websocketUrl);
                 store.dispatch(wsconnect(websocketUrl));
@@ -86,15 +79,18 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
     }
 
     componentDidMount() {
-        store.dispatch(send({ id:uuidv1(), func:'.sod.getUserPrincipal', obj:0}));
+        store.dispatch(send({id: uuidv1(), func:'.sod.getPositionRaw', obj:0}));
     }
 
     render() {
+        const flatPosition:FlattenedPosition[] = this.props.position !== undefined? this.props.position.map((v:any) => { return {averagePrice: v.averagePrice, longQuantity: v.longQuantity,
+               settledLongQuantity:v.settledLongQuantity, assetType: v.instrument.assetType, cusip: v.instrument.cusip, marketValue: v.marketValue, symbol:v.instrument.symbol}}):[];
+
         return (
             <div className="ag-theme-alpine" style={ {width: '95%', height:'75%' } } >
                 <div className="ag-theme-alpine" style={ { height: 750, margin: '2%'} } >
                     <AgGridReact
-                        rowData={this.state.position}
+                        rowData={flatPosition}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
                         getRowNodeId={(n:FlattenedPosition) =>{return n.symbol}}
@@ -150,10 +146,8 @@ function jsonToQueryString(json:any) {
 }
 
 const mapStateToProps = (state:any) => {
-    
-    console.log('PositionTab.mapStateToProps ', state);
-    let retValue = {userPrincipals: state.userPrincipals}
-    
+    let retValue = {userPrincipals: state.userPrincipals, position: state.securitiesAccount !== undefined? state.securitiesAccount.positions:undefined}
+    console.log('PositionTab.mapStateToProps retValue', retValue);
     return retValue;
 };
 

@@ -53,7 +53,7 @@ class TradeTab extends Component<TradeTabProps> {
                         rowData={this.flattendTrade(this.props)}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:FlattenedTrade) =>{return n.symbol}}
+                        getRowNodeId={(n:FlattenedTrade) =>{return String(n.orderId)}}
                         
                         ref={(grid: any) => {
                             if (grid) {
