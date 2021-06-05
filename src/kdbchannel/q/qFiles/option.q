@@ -72,7 +72,7 @@ show lotdir
  refreshed_access_token:access_dict[`access_token];
  .req.def["Authorization"]:"Bearer ",refreshed_access_token;
  trades:.req.get["https://api.tdameritrade.com/v1/accounts/489682556/transactions?type=TRADE";()!()];
- select from trades
+ trades
  }
 
 .sod.getUserPrincipal:{
