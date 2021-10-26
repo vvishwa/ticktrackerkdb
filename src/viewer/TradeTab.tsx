@@ -24,7 +24,7 @@ class TradeTab extends Component<TradeTabProps> {
     
     
     private flattendTrade(props: TradeTabProps): FlattenedTrade[] {
-        return props.trade.length !== 0 ? props.trade.map((v) => {
+        return props.trade.length !== 0 ? props.trade.filter((v=>{return v.type==='TRADE'})).map((v) => {
             return {
                 accountId: v.transactionItem.accountId, additionalFee: v.fees.additionalFee, amount: v.transactionItem.amount, assetType: v.transactionItem.instrument.assetType,
                 cashBalanceEffectFlag: v.cashBalanceEffectFlag, cdscFee: v.fees.cdscFee, commission: v.fees.commission, cost: v.transactionItem.cost,
