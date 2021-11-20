@@ -50,17 +50,33 @@ system "c 25 4096";
 h1:hopen `:localhost:5001;
 upr:h1(`.sod.getUserPrincipal,0);
 
-buildCred:{userid:upr[`accounts][0][`accountId];token:upr[`streamerInfo][`token];company:upr[`accounts][0][`company];segment:upr[`accounts][0][`segment];cddomain:upr[`accounts][0][`accountCdDomainId];usergroup:upr[`streamerInfo][`userGroup];accesslevel:upr[`streamerInfo][`accessLevel];authorized:"Y";timestamp:(((`long$`timestamp$"Z"$upr[`streamerInfo][`tokenTimestamp]) - (`long$1970.01.01D00:00.000000000)) % 1000000);appid:upr[`streamerInfo][`appId];acl:upr[`streamerInfo][`acl];`userid`token`company`segment`cddomain`usergroup`accesslevel`authorized`timestamp`appid!(userid;token;company;segment;cddomain;usergroup;accesslevel;authorized;string[timestamp];appid)};
+buildCred:{[upr] userid:upr[`accounts][0][`accountId];token:upr[`streamerInfo][`token];company:upr[`accounts][0][`company];segment:upr[`accounts][0][`segment];cddomain:upr[`accounts][0][`accountCdDomainId];usergroup:upr[`streamerInfo][`userGroup];accesslevel:upr[`streamerInfo][`accessLevel];authorized:"Y";timestamp:(((`long$`timestamp$"Z"$upr[`streamerInfo][`tokenTimestamp]) - (`long$1970.01.01D00:00.000000000)) % 1000000);appid:upr[`streamerInfo][`appId];acl:upr[`streamerInfo][`acl];`userid`token`company`segment`cddomain`usergroup`accesslevel`authorized`timestamp`appid!(userid;token;company;segment;cddomain;usergroup;accesslevel;authorized;string[timestamp];appid)};
 
-buildCredUri:{userid:upr[`accounts][0][`accountId];token:upr[`streamerInfo][`token];company:upr[`accounts][0][`company];segment:upr[`accounts][0][`segment];cddomain:upr[`accounts][0][`accountCdDomainId];usergroup:upr[`streamerInfo][`userGroup];accesslevel:upr[`streamerInfo][`accessLevel];authorized:"Y";timestamp:(((`long$`timestamp$"Z"$upr[`streamerInfo][`tokenTimestamp]) - (`long$1970.01.01D00:00.000000000)) % 1000000);appid:upr[`streamerInfo][`appId];acl:upr[`streamerInfo][`acl]; "userid=",.h.hu[userid],"&token=",.h.hu[token],"&company=",.h.hu[company],"&segment=",.h.hu[segment],"&cddomain=",.h.hu[cddomain],"&usergroup=",.h.hu[usergroup],"&accesslevel=",.h.hu[accesslevel],"&authorized=",.h.hu[authorized],"&timestamp=",string[timestamp],"&appid=",.h.hu[appid],"&acl=",.h.hu[acl]};
+buildCredUri:{[upr] userid:upr[`accounts][0][`accountId];token:upr[`streamerInfo][`token];company:upr[`accounts][0][`company];segment:upr[`accounts][0][`segment];cddomain:upr[`accounts][0][`accountCdDomainId];usergroup:upr[`streamerInfo][`userGroup];accesslevel:upr[`streamerInfo][`accessLevel];authorized:"Y";timestamp:(((`long$`timestamp$"Z"$upr[`streamerInfo][`tokenTimestamp]) - (`long$1970.01.01D00:00.000000000)) % 1000000);appid:upr[`streamerInfo][`appId];acl:upr[`streamerInfo][`acl]; "userid=",.h.hu[userid],"&token=",.h.hu[token],"&company=",.h.hu[company],"&segment=",.h.hu[segment],"&cddomain=",.h.hu[cddomain],"&usergroup=",.h.hu[usergroup],"&accesslevel=",.h.hu[accesslevel],"&authorized=",.h.hu[authorized],"&timestamp=",string[timestamp],"&appid=",.h.hu[appid],"&acl=",.h.hu[acl]};
 
-pms:`credential`token`version!(buildCredUri[];upr[`streamerInfo][`token];"1.0");
+pms:`credential`token`version!(buildCredUri[upr];upr[`streamerInfo][`token];"1.0");
 req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms);
 reqs:(enlist `requests)!(enlist enlist req);
 
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
-/.ws.VERBOSE:1b;
+.ws.VERBOSE:1b;
 .echo.upd:show;
 .echo.h:.ws.open[wsurl;`.echo.upd];
-/.echo.h ".j.j reqs";
+.streamLogin:.j.j reqs;
+.echo.h .streamLogin;
+
+.getStream:{
+ .h1:hopen `:localhost:5001;
+ .upr:.h1(`.sod.getUserPrincipal,0);
+ .pms:`credential`token`version!(buildCredUri[.upr];.upr[`streamerInfo][`token];"1.0");
+ .req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;.upr[`accounts][0][`accountId];.upr[`streamerInfo][`appId];.pms);
+ .reqs:(enlist `requests)!(enlist enlist .req);
+ .wsurl:"wss://",.upr[`streamerInfo][`streamerSocketUrl],"/ws";
+ .utl.require"ws-client"
+ .ws.VERBOSE:1b;
+ .echo.upd:show;
+ .echo.h:.ws.open[.wsurl;`.echo.upd];
+ .wspayload:.j.j .reqs;
+ .response:.echo.h .wspayload;
+ .response}

@@ -36,7 +36,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    store.dispatch(connect('ws://apj:5001/'));
+    store.dispatch(connect('ws://apj.local:5001/'));
     this.openWS();
   }
 
@@ -128,7 +128,7 @@ class App extends Component {
   }
 
   openWS = function () {
-    let ws = new WebSocket("ws://apj:5001/");
+    let ws = new WebSocket("ws://apj.local:5001/");
     ws.postQ = {};
     ws.onmessage = this.onmessage.bind(this);
     ws.onopen = this.onopen.bind(this);

@@ -15,7 +15,7 @@ var request = {
     ]
 }
 
-var request = {
+var requestNew = {
     "requests": [
         {
             "service": "NEWS_HEADLINE", 
@@ -62,3 +62,4 @@ var request = {
         }
     ]
 }
+

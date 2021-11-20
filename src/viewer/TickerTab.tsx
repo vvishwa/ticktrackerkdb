@@ -37,7 +37,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
 
     componentDidMount() {
-        rtstore.dispatch(wsconnect('ws://apj:5001/'));
+        rtstore.dispatch(wsconnect('ws://apj.local:5001/'));
     }
 
     clickToSubscribe = (e:any) => {
