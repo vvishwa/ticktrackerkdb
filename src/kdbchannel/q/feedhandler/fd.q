@@ -58,9 +58,9 @@ pms:`credential`token`version!(buildCredUri[upr];upr[`streamerInfo][`token];"1.0
 req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms);
 reqs:(enlist `requests)!(enlist enlist req);
 
-pms_q:`keys`fields!(`GOOG`AAPL;`0`1`2`3`4`5`6`7`8`);
+pms_q:`keys`fields!(`$"GOOG,AAPL";`$ "0,1,2,3,4,5,6,7,8");
 req_q:`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q);
-reqs_q:(enlist `requests)!(enlist enlist req_q);
+reqs_q:(enlist `requests)!(enlist req_q);
 
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
