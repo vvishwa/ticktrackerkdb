@@ -17,7 +17,7 @@ url:base_url,consumer_key,"&symbol=",symbol
 
 ltd:{x: "." vs x; x[0],"-",x[1],"-",x[2]} string .z.d
 
-savePath:{tab:(enlist .j.k .Q.hg url)[`$x]; path:`$":",dbdir,"/eod/",x,"/", ltd,"/"; path set tab} 
+savePath:{tab:(enlist .j.k .Q.hg url)[`$x]; path:`$":",dbdir,"/eod/",x,"/", ltd,"/"; path set tab}
 
 saveAllPaths:{savePath each "," vs symbol}
 
@@ -66,8 +66,9 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
 .ws.VERBOSE:1b;
 /(raze raze data)`content
+/if[98h~(type raze (raze raze d0)`content`key);show (raze (raze raze d0)`content`key);]
 .notsubscribed:1b;
-.echo.upd:{[x] show x;if[(enlist `notify)~(key .j.k x);if[.notsubscribed;(show "notified";.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already Subscribed"];show "Already notified"]};
+.echo.upd:{[x] (show x);if[(enlist `notify)~(key .j.k x);if[.notsubscribed;(show "notified";.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];show "Already notified"]};
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
