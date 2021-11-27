@@ -69,7 +69,7 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 /if[98h~(type raze (raze raze d0)`content`key);show (raze (raze raze d0)`content`key);]
 .getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[98h~(type raze (raze raze x)`content`key);t:(raze (raze raze x)`content`key)];t}
 .notsubscribed:1b;
-.echo.upd:{[x] if[(not .notsubscribed) and ((enlist `data)~(key .j.k x));show x;show (raze raze .j.k x)`service; `td_quote upsert .getTdTable[.j.k x]];if[(enlist `notify)~(key .j.k x);if[.notsubscribed;((show "notified";);.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];show "Already notified"];};
+.echo.upd:{[x] if[(not .notsubscribed) and ((enlist `data)~(key .j.k x)); `td_quote upsert .getTdTable[.j.k x]];if[(enlist `notify)~(key .j.k x);if[.notsubscribed;((show "notified";);.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];show "Already notified"];};
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
