@@ -67,26 +67,11 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 .ws.VERBOSE:1b;
 /(raze raze data)`content
 /if[98h~(type raze (raze raze d0)`content`key);show (raze (raze raze d0)`content`key);]
-.getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[98h~(type raze (raze raze x)`content`key);t:(raze (raze raze x)`content`key)];t}
+.getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[98h~(type raze (raze raze x)`content`key);t:(raze (raze raze x)`content`key)];t;t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t1;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
 .notsubscribed:1b;
-.echo.upd:{[x] if[(not .notsubscribed) and ((enlist `data)~(key .j.k x)); `td_quote upsert .getTdTable[.j.k x]];if[(enlist `notify)~(key .j.k x);if[.notsubscribed;((show "notified";);.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];show "Already notified"];};
+.echo.upd:{[x] if[(not .notsubscribed) and ((enlist `data)~(key .j.k x)); `td_quote upsert .getTdTable[.j.k x]];if[(enlist `notify)~(key .j.k x);if[.notsubscribed;((show "notified";);.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];];};
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
 /.streamQuote:.j.j reqs_q;
-/.echo.h .streamQuote
 
-.getStream:{
- .h1:hopen `:localhost:5001;
- .upr:.h1(`.sod.getUserPrincipal,0);
- .pms:`credential`token`version!(buildCredUri[.upr];.upr[`streamerInfo][`token];"1.0");
- .req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;.upr[`accounts][0][`accountId];.upr[`streamerInfo][`appId];.pms);
- .reqs:(enlist `requests)!(enlist enlist .req);
- .wsurl:"wss://",.upr[`streamerInfo][`streamerSocketUrl],"/ws";
- .utl.require"ws-client"
- .ws.VERBOSE:1b;
- .echo.upd:show;
- .echo.h:.ws.open[.wsurl;`.echo.upd];
- .wspayload:.j.j .reqs;
- .response:.echo.h .wspayload;
- .response}
