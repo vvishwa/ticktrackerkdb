@@ -35,6 +35,8 @@ positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json"
 positions:select averagePrice,longQuantity,settledLongQuantity,instrument,marketValue from positionsraw[`securitiesAccount;`positions]
 
 h:neg hopen `:localhost:5001; /* connect to rdb */
+h2:hopen `:localhost:5001; /* connect to rdb */
+.sod.pt:h2(`.sod.position_tkrs)
 
 feedQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;h(`upd;`quote;select `$assetType,`$assetMainType,`$cusip,`$symbol,`$description,`float$bidPrice,`float$bidSize,`$bidId,`float$askPrice,`float$askSize,`$askId,`float$lastPrice,`float$lastSize,`$lastId,`float$openPrice,`float$highPrice,`float$lowPrice,`$bidTick,`float$closePrice,`float$netChange,`float$totalVolume,`int$quoteTimeInLong,`int$tradeTimeInLong,`float$mark,`$exchange,`$exchangeName,`boolean$marginable,`boolean$shortable,`float$volatility,`int$digits,`int$nAV,`float$peRatio,`float$divAmount,`float$divYield,`$divDate,`$securityStatus,`float$regularMarketLastPrice,`int$regularMarketLastSize,`int$regularMarketNetChange,`int$regularMarketTradeTimeInLong,`float$netPercentChangeInDouble,`float$markChangeInDouble,`float$markPercentChangeInDouble,`float$regularMarketPercentChangeInDouble,`boolean$delayed from tall[x])};
 
@@ -58,20 +60,20 @@ pms:`credential`token`version!(buildCredUri[upr];upr[`streamerInfo][`token];"1.0
 req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms);
 reqs:(enlist `requests)!(enlist enlist req);
 
-pms_q:`keys`fields!(`$"GOOG,AAPL";`$ "0,1,2,3,4,5,6,7,8");
-req_q:`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q);
-reqs_q:(enlist `requests)!(enlist enlist req_q);
+.sod.ptmod:{("," sv string (distinct 4#.sod.pt))}
+
+.sod.ptseq:1;
+pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
+req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
 
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
 .ws.VERBOSE:1b;
-/(raze raze data)`content
-/if[98h~(type raze (raze raze d0)`content`key);show (raze (raze raze d0)`content`key);]
 .getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[98h~(type raze (raze raze x)`content`key);t:(raze (raze raze x)`content`key)];t;t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t1;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
-.notsubscribed:1b;
-.echo.upd:{[x] if[(not .notsubscribed) and ((enlist `data)~(key .j.k x)); `td_quote upsert .getTdTable[.j.k x]];if[(enlist `notify)~(key .j.k x);if[.notsubscribed;((show "notified";);.notsubscribed:0b;.echo.h .streamQuote;.streamQuote:.j.j reqs_q);show "Already subscribed"];];};
+
+.echo.upd:{[x] show x;if[(enlist `data)~(key .j.k x); h(`upd;`td_quote_rt; .getTdTable[.j.k x])];if[(enlist `notify)~(key .j.k x);if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;.echo.h .streamQuote;.streamQuote:.j.j reqs_q[]);show "Already subscribed"];];};
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
 /.streamQuote:.j.j reqs_q;
-

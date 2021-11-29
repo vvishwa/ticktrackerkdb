@@ -8,6 +8,9 @@ lotdir0:`$enlist dbdir,"/refdata"
 lotdir:lotdir0[0]
 show lotdir
 .Q.l lotdir
+.sod.position_tkrs:`GOOG`MSFT`ELYS`RTX`TELL`AMD`MT`PLUG`BA`AAPL
+/`TSM
+/`RIOT`ACST`BNGO`ARVL`HTBX`BBD`VLDR`ISEE`RESN`SYNH`STM`FCEL`NNOX`SOLO`PFE`SNDL`REAL;
 
 .eod.getOption: {[lottd;ticker;exch;dateIndex]
  allsyms:ticker,".",exch;
@@ -39,7 +42,7 @@ show lotdir
  optionchainlength:select count options from optiondata; .eod.getExpiration[ticker;exch] each til first optionchainlength`options}
 
 .eod.getTrade:{[] lot:select lastTradeDate,code from lastoptiontrade where code~\:"AAPL",exchange~\:"US";
-  lottd:last lot[`lastTradeDate]; 
+  lottd:last lot[`lastTradeDate];
   path:`$":",dbdir,"/eod/AAPL.US/",lottd,"/";
   eodtrade:get path; select from eodtrade }
 
