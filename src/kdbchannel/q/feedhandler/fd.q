@@ -70,9 +70,9 @@ reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
 .ws.VERBOSE:1b;
-.getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[98h~(type raze (raze raze x)`content`key);t:(raze (raze raze x)`content`key)];t;t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t1;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
+.getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[12=count key flip raze (raze x)`content;t:(raze (raze raze x)`content`key)];t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
 
-.echo.upd:{[x] show x;if[(enlist `data)~(key .j.k x); h(`upd;`td_quote_rt; .getTdTable[.j.k x])];if[(enlist `notify)~(key .j.k x);if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;.echo.h .streamQuote;.streamQuote:.j.j reqs_q[]);show "Already subscribed"];];};
+.echo.upd:{[x] show x;if[(enlist `data)~(key .j.k x); h(`upd;`td_quote_rt; .getTdTable[.j.k x])];if[(enlist `notify)~(key .j.k x);if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;system "sleep 5";.echo.h .streamQuote;.streamQuote:.j.j reqs_q[]);show "Already subscribed"];];};
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
