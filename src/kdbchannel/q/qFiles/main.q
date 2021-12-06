@@ -2,9 +2,10 @@ system"c 20 170";
 /https://code.kx.com/q/wp/websockets/
 /* subs table to keep track of current subscriptions */
 subs:3!flip `handle`id`func`params!"iis*"$\:();
+regi:2!flip `handle`id`params!"isf"$\:();
 /quote:flip `time`sym`bid`ask!"nsff"$\:();
 upd:insert;
-updj:{cnt:x[0]; tab:x[1]; if[cnt=12;`td_quote_raw upsert tab]; if[cnt<12; `td_quote_raw upsert (td_quote_raw lj tab)]}
+updj:{cnt:x[0]; tab:x[1]; if[cnt=12;`td_quote_raw upsert tab;(neg (0!regi)[0]`handle).j.j tab]; if[cnt<12; `td_quote_raw upsert (td_quote_raw lj tab); (neg regi[0]`handle) .j.j tab]}
 
 quote: flip `assetType`assetMainType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTimeInLong`tradeTimeInLong`mark`exchange`exchangeName`marginable`shortable`volatility`digits`52WkHigh`52WkLow`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`regularMarketTradeTimeInLong`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!"sssssffsffsffsfffsfffiifssbbfiffifffssfiiiffffb"$\:();
 td_quote_rt:(flip `ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol!())
@@ -33,10 +34,11 @@ prepSproc:{[x]
  };
 
 .z.ws:{
- .dev.ws:x; 
+ .dev.ws:x;
  p:.j.k .dev.ws;
- if[not (p`func)~".rt.subscribe";show formatWS[x; 1b]]
+ if[not ((p`func)~".rt.subscribe" or (p`func)~".sod.register");show formatWS[x; 1b]]
  if[(p`func)~".rt.subscribe";.rt.subscribe[x]]
+ if[(p`func)~".sod.register";.sod.register[x]]
  };
 
 .z.wc: {delete from `subs where handle=x};
@@ -47,6 +49,11 @@ prepSproc:{[x]
  fname:`getQuotes;
  id:x`id;
  arg:`$x`obj;`subs upsert(.z.w;`int$id;fname;arg);(neg rh)(insert; `tickers; (arg; arg))};
+
+.sod.register:{
+ x:.j.k x;
+ id:x`id;
+ arg:x`obj;`regi upsert(.z.w;`$id;arg)};
 
 getQuotes:{
   filter:$[all raze null x;distinct quote`symbol;raze x];
@@ -74,3 +81,4 @@ saveFiles:{
  };
 
 .z.exit:saveFiles;
+
