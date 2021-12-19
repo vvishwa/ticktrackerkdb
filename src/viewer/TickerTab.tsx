@@ -7,7 +7,7 @@ import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, Gri
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
-import { connect as wsconnect, send } from '@giantmachines/redux-websocket';
+import { connect as wsconnect, send } from '@giantmachines/redux-websocket/dist';
 import { connect } from 'react-redux';
 
 type TickerTabProps = {
