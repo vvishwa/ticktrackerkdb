@@ -6,7 +6,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { FlattenedPosition, Position } from '../dto/position';
 import { store } from '../store/store';
-import { send } from '@giantmachines/redux-websocket';
+import { send } from '@giantmachines/redux-websocket/dist';
 import { v1 as uuidv1 } from 'uuid';
 import { connect } from 'react-redux';
 
