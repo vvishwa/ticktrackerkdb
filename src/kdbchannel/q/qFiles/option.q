@@ -8,9 +8,8 @@ lotdir0:`$enlist dbdir,"/refdata"
 lotdir:lotdir0[0]
 show lotdir
 .Q.l lotdir
-.sod.position_tkrs:`GOOG`MSFT`ELYS`RTX`TELL`AMD`MT`PLUG`BA`AAPL
-/`TSM
-/`RIOT`ACST`BNGO`ARVL`HTBX`BBD`VLDR`ISEE`RESN`SYNH`STM`FCEL`NNOX`SOLO`PFE`SNDL`REAL;
+.sod.position_tkrs:`GOOG`MSFT`ELYS`RTX`TELL`AMD`PLUG`BA`AAPL`RIOT`BNGO`ARVL`HTBX`VLDR`ISEE`RESN`FCEL`NNOX`SOLO`PFE`SNDL`REAL;
+/`TSM`ACST`BBD`STM`MT`SYNH
 
 .eod.getOption: {[lottd;ticker;exch;dateIndex]
  allsyms:ticker,".",exch;
