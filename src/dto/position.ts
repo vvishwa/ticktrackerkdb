@@ -14,4 +14,5 @@ export interface FlattenedPosition {
     cusip:string;
     symbol:string;
     marketValue: number;
+    currentPrice: number;
 }

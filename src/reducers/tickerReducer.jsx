@@ -56,6 +56,9 @@ const funcResponse = (msg, prevState) => {
       case '.sod.getUserPrincipal':
         retValue = {...prevState, userPrincipals: fArgs, };
         break;
+    case 'td_quote_raw':
+        retValue = {...prevState, td_quote_raw: fArgs, };
+        break;
       default:
         retValue = {...prevState};
         break;

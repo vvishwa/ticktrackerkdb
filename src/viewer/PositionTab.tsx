@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 
 type PositionTabProps = {
     position:Position[],
+    td_quote_raw:any,
     userPrincipals:any
 }
 
@@ -34,12 +35,12 @@ class PositionTab extends Component<PositionTabProps> {
 
     componentDidMount() {
         store.dispatch(send({id: uuidv1(), func:'.sod.getPositionRaw', obj:0}));
-        store.dispatch(send({id: uuidv1(), func:'.sod.register', obj:[0]}));
+        store.dispatch(send({id: uuidv1(), func:'.sod.register', obj:0}));
     }
 
     render() {
         const flatPosition:FlattenedPosition[] = this.props.position !== undefined? this.props.position.map((v:any) => { return {averagePrice: v.averagePrice, longQuantity: v.longQuantity,
-               settledLongQuantity:v.settledLongQuantity, assetType: v.instrument.assetType, cusip: v.instrument.cusip, marketValue: v.marketValue, symbol:v.instrument.symbol}}):[];
+               settledLongQuantity:v.settledLongQuantity, assetType: v.instrument.assetType, cusip: v.instrument.cusip, marketValue: v.marketValue, symbol:v.instrument.symbol, currentPrice:v.currentPrice}}):[];
 
         return (
             <div className="ag-theme-alpine" style={ {width: '95%', height:'75%' } } >
@@ -68,7 +69,8 @@ class PositionTab extends Component<PositionTabProps> {
             { field:'assetType', headerName:'Asset'},
             { field:'cusip', headerName:'Cusip'},
             { field:'symbol', headerName:'Symbol'},
-            { field:'averagePrice', headerName:'Avg Price'}, 
+            { field:'averagePrice', headerName:'Avg Price'},
+            { field: 'currentPrice', headerName:'Current Price'},
             { field:'longQuantity', headerName:'Qty'},
             { field:'settledLongQuantity', headerName:'Settled Qty'},
             { field: 'marketValue', headerName:'Mkt Value'}
@@ -94,8 +96,15 @@ class PositionTab extends Component<PositionTabProps> {
 
 
 const mapStateToProps = (state:any) => {
-    let retValue = {userPrincipals: state.userPrincipals, position: state.securitiesAccount !== undefined? state.securitiesAccount.positions:undefined}
-    console.log('PositionTab.mapStateToProps retValue', retValue);
+    const td_raw:any[] = state.td_quote_raw;
+
+    const map = new Map(td_raw.map(obj => [obj.ticker, obj["3"]]));
+    console.log(map);
+
+    const flatPosition = state.securitiesAccount !== undefined? state.securitiesAccount.positions.map((value: { currentPrice: any; instrument: { symbol: any; }; }) => {value.currentPrice= map.get(value.instrument.symbol) !== undefined? map.get(value.instrument.symbol):value.currentPrice; return value}):undefined;
+    //console.log(flatPosition);
+    let retValue = {userPrincipals: state.userPrincipals, position: flatPosition, td_quote_raw: state.td_quote_raw !==undefined? state.td_quote_raw:undefined}
+    //console.log('PositionTab.mapStateToProps retValue', retValue);
     return retValue;
 };
 
