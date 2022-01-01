@@ -46,6 +46,7 @@ class PositionTab extends Component<PositionTabProps> {
             <div className="ag-theme-alpine" style={ {width: '95%', height:'75%' } } >
                 <div className="ag-theme-alpine" style={ { height: 750, margin: '2%'} } >
                     <AgGridReact
+                        immutableData={true}
                         rowData={flatPosition}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
@@ -66,8 +67,8 @@ class PositionTab extends Component<PositionTabProps> {
 
     createColunDefs(): (ColDef|ColGroupDef)[] {
         return [
-            { field:'assetType', headerName:'Asset'},
-            { field:'cusip', headerName:'Cusip'},
+            //{ field:'assetType', headerName:'Asset'},
+            //{ field:'cusip', headerName:'Cusip'},
             { field:'symbol', headerName:'Symbol'},
             { field:'averagePrice', headerName:'Avg Price'},
             { field: 'currentPrice', headerName:'Current Price'},
@@ -98,7 +99,7 @@ class PositionTab extends Component<PositionTabProps> {
 const mapStateToProps = (state:any) => {
     const td_raw:any[] = state.td_quote_raw;
 
-    const map = new Map(td_raw.map(obj => [obj.ticker, obj["3"]]));
+    const map = td_raw !== undefined? new Map(td_raw.map(obj => [obj.ticker, obj["3"]])):new Map();
     console.log(map);
 
     const flatPosition = state.securitiesAccount !== undefined? state.securitiesAccount.positions.map((value: { currentPrice: any; instrument: { symbol: any; }; }) => {value.currentPrice= map.get(value.instrument.symbol) !== undefined? map.get(value.instrument.symbol):value.currentPrice; return value}):undefined;
