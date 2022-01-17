@@ -22,13 +22,15 @@ class BalanceTab extends Component<BalanceTabProps> {
         super(props);
 
         console.log('BalanceTab.props ', props);
-
     }
+
     componentDidUpdate(prevProps:BalanceTabProps) {
         console.log('props received ', prevProps);
     }
 
     render() {
+        console.log('render() BalanceTab.props ', this.props);
+
         const balance = []
         if (this.props.initialBalances !== undefined && this.props.initialBalances !== undefined) {
             balance.push({...this.props.currentBalances, balanceType:'Current'});
@@ -103,11 +105,13 @@ class BalanceTab extends Component<BalanceTabProps> {
 };
 
 const mapStateToProps = (state:any) => {
-    let retValue = {initialBalances: state.securitiesAccount !== undefined? state.securitiesAccount.initialBalances:undefined,
-        currentBalances: state.securitiesAccount !== undefined? state.securitiesAccount.currentBalances:undefined,
-        projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:undefined}
-    console.log('BalanceTab.mapStateToProps retValue', retValue);
-    return retValue;
+    if(state.securitiesAccount !== undefined) {
+        let retValue = {initialBalances: state.securitiesAccount !== undefined? state.securitiesAccount.initialBalances:undefined,
+            currentBalances: state.securitiesAccount !== undefined? state.securitiesAccount.currentBalances:undefined,
+            projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:undefined}
+        console.log('BalanceTab.mapStateToProps retValue', retValue);
+        return retValue;
+    }
 };
 
 export default connect(mapStateToProps)(BalanceTab);
