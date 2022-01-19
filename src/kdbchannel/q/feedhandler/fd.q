@@ -65,18 +65,22 @@ reqs:(enlist `requests)!(enlist enlist req);
 .sod.ptseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+
 reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
+reqs_c:{(enlist `requests)!(enlist enlist req_c[])};
 
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
 .ws.VERBOSE:1b;
 .getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[12=count key flip raze (raze x)`content;t:(raze (raze raze x)`content`key)];t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
 
-.getTdTableRaw:{t:x;t1:`ticker xcol t;(count cols t1;`ticker xkey t1)}
+.getTdTableRaw:{t:raze x[0];t1:`ticker xcol t;(count cols t1;`ticker xkey t1)}
+.getTdTableChart:{t:raze x[0];t1:`ticker xcol t;(count cols t1;`ticker xkey t1)}
+/{t:enlist x; show .getTdTableChart[t]} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY")
 
-.echo.upd:{[x] ;if[(enlist `data)~(key .j.k x); show x;{t:enlist x; h(`updj; .getTdTableRaw[t])} each ((raze .j.k x)`content)0];if[(enlist `notify)~(key .j.k x); show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat);if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;system "sleep 5";.echo.h .streamQuote;.streamQuote:.j.j reqs_q[]);show "Already subscribed"];];};
+.echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; {t:enlist x; h(`updj; .getTdTableRaw[t])} each (select content from (raze .j.k x) where service~\:"QUOTE")];if[(enlist `notify)~(key .j.k x); show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat);if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;system "sleep 5";.echo.h .streamChart;.echo.h .streamQuote;.streamQuote:.j.j reqs_q[];.streamChart:.j.j reqs_c[]);show "Already subscribed"];];};
 
 .echo.h:.ws.open[wsurl;`.echo.upd];
 .streamLogin:.j.j reqs;
 .echo.h .streamLogin;
-/.streamQuote:.j.j reqs_q;
