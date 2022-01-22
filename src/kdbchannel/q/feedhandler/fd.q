@@ -75,7 +75,8 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 .ws.VERBOSE:1b;
 .getTdTable:{t:flip(`a`b!(`1`1;`2`2));if[12=count key flip raze (raze x)`content;t:(raze (raze raze x)`content`key)];t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t;t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, raze bidId, totalVol from t1;t2}
 
-.getTdTableRaw:{t:raze x[0];t1:`ticker xcol t;(count cols t1;`ticker xkey t1)}
+/.getTdTableRaw:{t:raze x[0];t1:`ticker xcol t;(count cols t1;`ticker xkey t1)}
+.getTdTableRaw:{t:raze x[0];t0:t[where 12=count each t];t1:`ticker xcol t0;(count cols t1;`ticker xkey t1)}
 .getTdTableChart:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 /{t:enlist x; show .getTdTableChart[t]} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY")
 
