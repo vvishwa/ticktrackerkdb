@@ -66,7 +66,8 @@ getQuotes:{
 
 getNews:{
   select from (`ticker`seq`symbol`errorCode`storyDateTime`headLine`status xcol td_news) where not storyDateTime  ~\:"N/A"
-}
+  };
+
 /*publish data according to subs table */
 pub:{
   row:(0!subs)[x];
