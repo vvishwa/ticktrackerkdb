@@ -106,9 +106,9 @@ class BalanceTab extends Component<BalanceTabProps> {
 
 const mapStateToProps = (state:any) => {
     if(state.securitiesAccount !== undefined) {
-        let retValue = {initialBalances: state.securitiesAccount !== undefined? state.securitiesAccount.initialBalances:undefined,
-            currentBalances: state.securitiesAccount !== undefined? state.securitiesAccount.currentBalances:undefined,
-            projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:undefined}
+        let retValue = {initialBalances: state.securitiesAccount !== undefined? state.securitiesAccount.initialBalances:[],
+            currentBalances: state.securitiesAccount !== undefined? state.securitiesAccount.currentBalances:[],
+            projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:[]}
         console.log('BalanceTab.mapStateToProps retValue', retValue);
         return retValue;
     }
