@@ -7,7 +7,7 @@ regi:2!flip `handle`id`params!"isf"$\:();
 upd:insert;
 updj:{cnt:x[0]; tab:x[1]; if[cnt=12;`td_quote_raw upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_quote_raw;tab)]]; if[cnt<12; `td_quote_raw upsert (td_quote_raw lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_quote_raw;tab)]]}
 
-upc:{cnt:x[0]; tab:x[1]; if[cnt=10;`td_chart upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_chart;tab)]];if[cnt<10; `td_chart upsert (td_chart lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
+upc:{cnt:x[0]; tab:x[1];if[cnt=8;`td_chart upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_chart;tab)]];if[cnt<8; `td_chart upsert (td_chart lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
 
 upn:{cnt:x[0]; tab:x[1]; if[cnt=12;`td_news upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_news;tab)]];if[cnt<12; `td_news upsert (td_news lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
 
