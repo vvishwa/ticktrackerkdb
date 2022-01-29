@@ -40,7 +40,7 @@ h2:hopen `:localhost:5001; /* connect to rdb */
 
 feedQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;h(`upd;`quote;select `$assetType,`$assetMainType,`$cusip,`$symbol,`$description,`float$bidPrice,`float$bidSize,`$bidId,`float$askPrice,`float$askSize,`$askId,`float$lastPrice,`float$lastSize,`$lastId,`float$openPrice,`float$highPrice,`float$lowPrice,`$bidTick,`float$closePrice,`float$netChange,`float$totalVolume,`int$quoteTimeInLong,`int$tradeTimeInLong,`float$mark,`$exchange,`$exchangeName,`boolean$marginable,`boolean$shortable,`float$volatility,`int$digits,`int$nAV,`float$peRatio,`float$divAmount,`float$divYield,`$divDate,`$securityStatus,`float$regularMarketLastPrice,`int$regularMarketLastSize,`int$regularMarketNetChange,`int$regularMarketTradeTimeInLong,`float$netPercentChangeInDouble,`float$markChangeInDouble,`float$markPercentChangeInDouble,`float$regularMarketPercentChangeInDouble,`boolean$delayed from tall[x])};
 
-.z.ts:{symbolstr:getSymbolStr[];`url set base_url,consumer_key,"&symbol=",symbolstr;{feedQuotes[`$x]} each "," vs symbolstr}
+.z.ts:{symbolstr:getSymbolStr[];if[not symbolstr=`;`url set base_url,consumer_key,"&symbol=",symbolstr;{feedQuotes[`$x]} each "," vs symbolstr]}
 
 extractQuotes:{symbolstr:getSymbolStr[];url:base_url,consumer_key,"&symbol=",symbolstr;dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;select `$assetType,`$assetMainType,`$cusip,`$symbol,`$description,`float$bidPrice,`float$bidSize,`$bidId,`float$askPrice,`float$askSize,`$askId,`float$lastPrice,`float$lastSize,`$lastId,`float$openPrice,`float$highPrice,`float$lowPrice,`$bidTick,`float$closePrice,`float$netChange,`float$totalVolume,`int$quoteTimeInLong,`int$tradeTimeInLong,`float$mark,`$exchange,`$exchangeName,`boolean$marginable,`boolean$shortable,`float$volatility,`int$digits,`int$nAV,`float$peRatio,`float$divAmount,`float$divYield,`$divDate,`$securityStatus,`float$regularMarketLastPrice,`int$regularMarketLastSize,`int$regularMarketNetChange,`int$regularMarketTradeTimeInLong,`float$netPercentChangeInDouble,`float$markChangeInDouble,`float$markPercentChangeInDouble,`float$regularMarketPercentChangeInDouble,`boolean$delayed from tall[x]};
 
@@ -88,6 +88,11 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 .getTdTableChart:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 .getTdTableNews:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
+
+.getTdTableChart1:{t:raze x[0];
+ t1:`seq`ticker`openPrice`highPrice`lowPrice`closePrice`volume xcol t;
+ (count cols t1;`ticker xkey t1)
+ }
 
 .echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; 
  {t:enlist x; h(`updj; .getTdTableRaw[t])} each (select content from (raze .j.k x) where service~\:"QUOTE");
