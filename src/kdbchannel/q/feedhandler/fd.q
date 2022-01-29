@@ -80,13 +80,34 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  raze bidId, totalVol from t1;t2
  }
 
-.getTdTableRaw:{t:raze x[0];t0:t[where 12=count each t]; 
+/.getTdTableRaw:{t:raze x[0];t0:t[where {(12=count x) and not `assetSubType in key x} each t]; 
+/ t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t0;
+/ t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, 
+/ raze bidId, totalVol from t1;
+/ (count cols t2;`ticker xkey t2)
+/ }
+
+.getTdTableRaw:{t:raze x[0];t0:t[where {(12=count x) and not `assetSubType in key x} each t];
  t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t0;
- t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId, 
+ t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId,
  raze bidId, totalVol from t1;
- (count cols t1;`ticker xkey t2)
+ t0_adr:t[where {(13=count x) and `assetSubType in key x} each t]; 
+ if[not 0=count t0_adr; 
+ t1_adr:`ticker`delayed`assetMaintype`assetSubType`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol
+ xcol t0_adr;
+ t2_adr:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId,
+ raze bidId, totalVol from t1_adr; 
+ t_all:(t2 uj t2_adr);];
+ if[0=count t0_adr;t_all:t2];
+ (count cols t_all;`ticker xkey t_all)
  }
-.getTdTableChart:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
+
+.getTdTableChart:{t:raze x[0];
+ t1:`seq`ticker`openPrice`highPrice`lowPrice`closePrice`volume`sequence`chartTime`chartDay xcol t;
+ t2:select `$ticker, openPrice, highPrice, lowPrice, closePrice, volume, chartTime, chartDay from t1; 
+ (count cols t2;`ticker xkey t2)
+ }
+
 .getTdTableNews:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 
 .getTdTableChart1:{t:raze x[0];
