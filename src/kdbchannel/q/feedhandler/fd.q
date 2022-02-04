@@ -88,7 +88,7 @@ buildCredUri:{[upr] userid:upr[`accounts][0][`accountId];token:upr[`streamerInfo
  string[timestamp],"&appid=",.h.hu[appid],"&acl=",.h.hu[acl]
  };
 
-showhb:1b
+showhb:0b
 pms:`credential`token`version!(buildCredUri[upr];upr[`streamerInfo][`token];"1.0");
 req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms);
 reqs:(enlist `requests)!(enlist enlist req);
@@ -116,7 +116,7 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  raze bidId, totalVol from t1;t2
  }
 
-.getTdTableRaw:{t:raze x[0];t0:t[where {(not `assetSubType in key x) and (12=count x)} each t];
+.getTdTableRaw1:{t:raze x[0];t0:t[where {(not `assetSubType in key x) and (12=count x)} each t];
  /show `t0, t0;
  t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t0;
  t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId,
@@ -138,6 +138,15 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
  (count cols table;`ticker xkey table)
  }
+
+.getTdTableRaw:{t:raze x[0];
+ t0:{`delayed`assetMainType`assetSubType`cusip _ x} each t;
+ tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
+ table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
+ (count cols table;`ticker xkey table)
+ }
+
 
 .getTdTableNews:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 
