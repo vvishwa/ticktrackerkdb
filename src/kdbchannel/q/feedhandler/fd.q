@@ -97,11 +97,14 @@ reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
+pms_o:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
 req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 
 reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
+reqs_o:{(enlist `requests)!(enlist enlist req_o[])};
 reqs_c:{(enlist `requests)!(enlist enlist req_c[])};
 reqs_n:{(enlist `requests)!(enlist enlist req_n[])};
 
@@ -132,21 +135,26 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  (count cols t_all;`ticker xkey t_all)
  }
 
-.getTdTableQuote:{t:raze x[0];t0:t[where {not `assetSubType in key x} each t];
+.getTdTableQuote1:{t:raze x[0];t0:t[where {not `assetSubType in key x} each t];
  tab:{[tt]; `key`1`2`3`4`5`6`7`8!tt[`key`1`2`3`4`5`6`7`8]} each t;
  tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
  table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
  (count cols table;`ticker xkey table)
  }
 
-.getTdTableRaw:{t:raze x[0];
- t0:{`delayed`assetMainType`assetSubType`cusip _ x} each t;
+.getTdTableQuote:{t:raze x[0];
  tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
  tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
  table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
  (count cols table;`ticker xkey table)
  }
 
+.getTdTableOption:{t:raze x[0];
+ tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
+ table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
+ (count cols table;`ticker xkey table)
+ }
 
 .getTdTableNews:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 
@@ -156,13 +164,14 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 
 .echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; 
- {t:enlist x; h(`updj; .getTdTableRaw[t])} each (select content from (raze .j.k x) where service~\:"QUOTE");
+ {t:enlist x; h(`updj; .getTdTableQuote[t])} each (select content from (raze .j.k x) where service~\:"QUOTE");
+ {t:enlist x; h(`updo; .getTdTableOption[t])} each (select content from (raze .j.k x) where service~\:"OPTION");
  {t:enlist x; h(`upc; .getTdTableChart[t])} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY");
  {t:enlist x; h(`upn; .getTdTableNews[t])} each (select content from (raze .j.k x) where service~\:"NEWS_HEADLINE")];
  if[(enlist `notify)~(key .j.k x); if[showhb;show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat)];
  if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;system "sleep 5";
- .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamNews;
- .streamQuote:.j.j reqs_q[];.streamChart:.j.j reqs_c[];.streamNews: 
+ .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
+ .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
  .j.j reqs_n[]);show "Already subscribed"];];
  };
 
