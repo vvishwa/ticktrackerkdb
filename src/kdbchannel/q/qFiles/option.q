@@ -8,7 +8,7 @@ lotdir0:`$enlist dbdir,"/refdata"
 lotdir:lotdir0[0]
 show lotdir
 .Q.l lotdir
-.sod.position_tkrs:`KOS`ELYS
+.sod.position_tkrs:`LAZR`SOS
 /.sod.position_tkrs:`GOOG`MSFT`ELYS`RTX`TELL`AMD`PLUG`BA`AAPL`RIOT`BNGO`ARVL`HTBX`VLDR`ISEE`RESN`FCEL`NNOX`SOLO`PFE`SNDL`REAL;
 /`TSM`ACST`BBD`STM`MT`SYNH
 
@@ -53,8 +53,7 @@ show lotdir
  positions:select averagePrice,longQuantity,settledLongQuantity,instrument,marketValue from positionsraw[`securitiesAccount;`positions];
  positions}
 
-.sod.getPositionRaw:{
- /positionsraw:.j.k raze read0 `$"/home/vijay/td/position.json";
+.sod.getPositionRaw0:{
  .req.def["Content-Type"]:"application/x-www-form-urlencoded";
  .req.def:enlist ["Authorization"] _ .req.def;
  refresh_token_encoded:system "echo $TD_REFRESH_TOKEN_ENCODED";
@@ -65,6 +64,48 @@ show lotdir
  positionsraw:.req.get["https://api.tdameritrade.com/v1/accounts/489682556?fields=positions";()!()];
  `.sod.position_tkrs upsert {`$x`symbol}each ((positionsraw`securitiesAccount)`positions)`instrument;
  positionsraw}
+
+.sod.getPositionRaw:{
+ .req.def["Content-Type"]:"application/x-www-form-urlencoded";
+ .req.def:enlist ["Authorization"] _ .req.def;
+ refresh_token_encoded:system "echo $TD_REFRESH_TOKEN_ENCODED";
+ oauth2_payload:"grant_type=refresh_token&refresh_token=",refresh_token_encoded[0],"&access_type=&code=&client_id=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&redirect_uri=";
+ access_dict:.req.post["https://api.tdameritrade.com/v1/oauth2/token";()!();oauth2_payload];
+ refreshed_access_token:access_dict[`access_token];
+ .req.def["Authorization"]:"Bearer ",refreshed_access_token;
+ positionsraw:.req.get["https://api.tdameritrade.com/v1/accounts/489682556?fields=positions";()!()];
+ `.sod.position_tkrs upsert {`$x`symbol}each ((positionsraw`securitiesAccount)`positions)`instrument;
+ sp:{syms:`$(x`instrument)`symbol; prices:x`averagePrice;(syms,prices)} each ((positionsraw`securitiesAccount)`positions);
+ /show sp;
+ {tab:distinct 5#.sod.callSch[x[0];neg x[1];2];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+ positionsraw}
+
+.sod.extractOption:{[opttype;sym;stkprice;moneyin];
+ base_url_option:"https://api.tdameritrade.com/v1/marketdata/chains?apikey=";
+ consumer_key:"NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1";
+ url:base_url_option,consumer_key,"&symbol=",(string sym);dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
+ if[opttype=`call;chain:(raze (raze tall)`callExpDateMap);];
+ if[not `FAILED~(`$tall`status)[0];
+ strikes:(key chain)[where moneyin> stkprice+\: -9h $ string key chain];];
+ if[`FAILED~(`$tall`status)[0];
+ strikes:`0.0;
+ /dt:flip `symbol`description`strikePrice`daysToExpiration`sch`intrinsicValue`openInterest`inTheMoney!"********"$\:();
+ dt:([] symbol:();description:();strikePrice:();daysToExpiration:();sch:();intrinsicValue:();openInterest:();inTheMoney:());
+ chain:enlist (enlist strikes)!(enlist dt);];
+ select from raze chain[strikes]
+ };
+
+.sod.callSch:{[ticker;price;deltaPrice];
+ cs:select symbol,description,strikePrice,daysToExpiration,
+ sch:{({mm:2#x;dd:2# 2 _ x;yy:"20",2# 4 _ x; dateformatted:yy,".",mm,".",dd;"D"$dateformatted}("C" vs ("_" vs x)[1])[0])} each symbol,intrinsicValue,openInterest,inTheMoney from .sod.extractOption[`call;ticker;price;deltaPrice];
+ cs iasc cs[;`sch]
+ };
+
+.sod.putSch:{[ticker;price;deltaPrice];
+ ps:select symbol,description,strikePrice,daysToExpiration,
+ sch:{({mm:2#x;dd:2# 2 _ x;yy:"20",2# 4 _ x; dateformatted:yy,".",mm,".",dd;"D"$dateformatted}("P" vs ("_" vs x)[1])[0])} each symbol,intrinsicValue,openInterest,inTheMoney from .sod.extractOption[`put;ticker;price;deltaPrice];
+ ps iasc ps[;`sch]
+ };
 
 .sod.getTrades:{
  /trades:.j.k raze read0 `$"/home/vijay/td/transaction.json";

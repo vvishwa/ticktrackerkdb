@@ -13,6 +13,7 @@ consumer_key:"NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1"
 /curl -X GET --header "Authorization: " "https://api.tdameritrade.com/v1/marketdata/quotes?apikey=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&symbol=VISL"
 
 base_url:"https://api.tdameritrade.com/v1/marketdata/quotes?apikey="
+base_url_option:"https://api.tdameritrade.com/v1/marketdata/chains?apikey="
 url:base_url,consumer_key,"&symbol=",symbol
 
 ltd:{x: "." vs x; x[0],"-",x[1],"-",x[2]} string .z.d
