@@ -49,8 +49,10 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
                 const lastPrices = v;
 
                 const pos = {...posOriginal, ...lastPrices}
-                positionRowsOriginal[posIndex] = pos
-                this.setState({positionRows: positionRowsOriginal})
+                if(JSON.stringify(pos) !== JSON.stringify(positionRowsOriginal[posIndex])) {
+                    positionRowsOriginal[posIndex] = pos
+                    this.setState({positionRows: positionRowsOriginal})
+                }
             }
         })
 

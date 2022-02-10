@@ -38,6 +38,7 @@ positions:select averagePrice,longQuantity,settledLongQuantity,instrument,market
 h:neg hopen `:localhost:5001; /* connect to rdb */
 h2:hopen `:localhost:5001; /* connect to rdb */
 .sod.pt:distinct h2(`.sod.position_tkrs)
+.sod.ot:distinct (flip select `$symbol from h2(`.sod.option_tkrs))`symbol
 
 feedQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
  h(`upd;`quote;select `$assetType,`$assetMainType,`$cusip,`$symbol,`$description,`float$bidPrice,
@@ -95,12 +96,13 @@ req:`service`command`requestid`account`source`parameters!("ADMIN";"LOGIN";0;upr[
 reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptmod:{("," sv string (distinct 4#.sod.pt))}
+.sod.otmod:{("," sv string (distinct 4#.sod.ot))}
 
-.sod.ptseq:1;
+.sod.ptseq:1;.sod.otseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
-pms_o:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
+pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
-req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
+req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
 req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 
@@ -170,7 +172,8 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  {t:enlist x; h(`upc; .getTdTableChart[t])} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY");
  {t:enlist x; h(`upn; .getTdTableNews[t])} each (select content from (raze .j.k x) where service~\:"NEWS_HEADLINE")];
  if[(enlist `notify)~(key .j.k x); if[showhb;show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat)];
- if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;system "sleep 5";
+ if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;
+ if[not (0=count .sod.ot);((show "notified";);.sod.ot: 4_.sod.ot;.sod.otseq:.sod.otseq+1;show .sod.ot;system "sleep 5";
  .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
  .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
  .j.j reqs_n[]);show "Already subscribed"];];
