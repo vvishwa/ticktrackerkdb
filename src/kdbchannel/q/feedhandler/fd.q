@@ -172,7 +172,7 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  {t:enlist x; h(`upc; .getTdTableChart[t])} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY");
  {t:enlist x; h(`upn; .getTdTableNews[t])} each (select content from (raze .j.k x) where service~\:"NEWS_HEADLINE")];
  if[(enlist `notify)~(key .j.k x); if[showhb;show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat)];
- if[not (0=count .sod.pt);((show "notified";);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;
+ if[not (0=count .sod.pt);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;]
  if[not (0=count .sod.ot);((show "notified";);.sod.ot: 4_.sod.ot;.sod.otseq:.sod.otseq+1;show .sod.ot;system "sleep 5";
  .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
  .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
