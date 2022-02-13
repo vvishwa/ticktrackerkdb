@@ -1,4 +1,6 @@
-system "P 12"
+system "P 13";
+system "c 25 1024";
+
 default:.Q.def[`ticker`rootdir!enlist [enlist "AAL,VISL"; enlist "/home/vijay/td/db"]] .Q.opt .z.x
 dbdir0:default`rootdir
 dbdir:dbdir0[0]
@@ -8,6 +10,7 @@ tickers:flip `syms`tkrs!"**"$\:()
 
 getSymbolStr:{ts:flip select tkrs from tickers;"," sv string distinct ts[`tkrs]}
 
+logWrite:{[para] h:hopen`:stderr.log; neg[h] para;hclose h;};
 symbol:first default[`ticker]
 consumer_key:"NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1"
 /curl -X GET --header "Authorization: " "https://api.tdameritrade.com/v1/marketdata/quotes?apikey=NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1&symbol=VISL"
@@ -66,8 +69,6 @@ extractQuotes:{symbolstr:getSymbolStr[];url:base_url,consumer_key,"&symbol=",sym
   from tall[x]
  };
 
-system "P 13";
-system "c 25 4096";
 h1:hopen `:localhost:5001;
 upr:h1(`.sod.getUserPrincipal,0);
 
@@ -97,23 +98,29 @@ reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptmod:{("," sv string (distinct 4#.sod.pt))}
 .sod.otmod:{("," sv string (distinct 4#.sod.ot))}
+.sod.l1futuresmod:{"/ES,/CL,/RTY"}
 
 .sod.ptseq:1;.sod.otseq:1;
-pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
-pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8")};
+pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,29,30,31")};
+pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
+pms_f:{`keys`fields!(`$.sod.l1futuresmod[];`$ "0,1,2,3,4,5,6,7,8")};
+pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
 req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
-req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+req_f:{`service`command`requestid`account`source`parameters!("LEVELONE_FUTURES";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_f[])};
+req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_n[])};
 
 reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
 reqs_o:{(enlist `requests)!(enlist enlist req_o[])};
 reqs_c:{(enlist `requests)!(enlist enlist req_c[])};
+reqs_f:{(enlist `requests)!(enlist enlist req_f[])};
 reqs_n:{(enlist `requests)!(enlist enlist req_n[])};
 
 wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 \l ws-client_0.2.1.q
 .ws.VERBOSE:1b;
+
 .getTdTable:
  {t:flip(`a`b!(`1`1;`2`2));if[12=count key flip raze (raze x)`content;
  t:(raze (raze raze x)`content`key)];
@@ -138,14 +145,14 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  (count cols t_all;`ticker xkey t_all)
  }
 
-.getTdTableQuote1:{t:raze x[0];t0:t[where {not `assetSubType in key x} each t];
- tab:{[tt]; `key`1`2`3`4`5`6`7`8!tt[`key`1`2`3`4`5`6`7`8]} each t;
- tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
- table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
+.getTdTableQuote:{t:raze x[0];
+ tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8`29`30`31!(ddef^x)[`key`1`2`3`4`5`6`7`8`29`30`31]} each t;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol`netChange`week52High`week52Low xcol tab;
+ table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol, netChange, week52High, week52Low from tabl;
  (count cols table;`ticker xkey table)
  }
 
-.getTdTableQuote:{t:raze x[0];
+.getTdTableFutures:{t:raze x[0];
  tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
  tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
  table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
@@ -153,29 +160,33 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 
 .getTdTableOption:{t:raze x[0];
- tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
- tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
- table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
+ tab:{ddef:(`2;`3;`4;`5;`6;`7;`8;`9;`10;`11;`12;`13)!(0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);val:`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`31`32`33`34`35`36!(ddef^x)[`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`31`32`33`34`35`36]} each t;
+ tab: `delayed`0`1 _ tab;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`highPrice`lowPrice`closePrice`totalVol`openInt`vol`quoteTime`tradeTime`intrinsicValue`netChange`strikePrice`daysToExpiration`delta`gamma`theta`vega`rho xcol tab;
+ table:select `$ticker,bidPrice,askPrice,lastPrice,highPrice,lowPrice,closePrice,totalVol,openInt,vol,quoteTime,tradeTime,intrinsicValue,netChange,strikePrice,daysToExpiration,delta,gamma,theta,vega,rho from tabl;
  (count cols table;`ticker xkey table)
  }
 
-.getTdTableNews:{t:raze x[0];t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
+.getTdTableNews:{t:raze x[0];t;t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 
 .getTdTableChart:{t:raze x[0];
  t1:`seq`ticker`openPrice`highPrice`lowPrice`closePrice`volume xcol t;
  (count cols t1;`ticker xkey t1)
  }
 
-.echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; 
+.echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; logWrite[x];
  {t:enlist x; h(`updj; .getTdTableQuote[t])} each (select content from (raze .j.k x) where service~\:"QUOTE");
+ {t:enlist x; h(`updf; .getTdTableFutures[t])} each (select content from (raze .j.k x) where service~\:"LEVELONE_FUTURES");
  {t:enlist x; h(`updo; .getTdTableOption[t])} each (select content from (raze .j.k x) where service~\:"OPTION");
  {t:enlist x; h(`upc; .getTdTableChart[t])} each (select content from (raze .j.k x) where service~\:"CHART_EQUITY");
  {t:enlist x; h(`upn; .getTdTableNews[t])} each (select content from (raze .j.k x) where service~\:"NEWS_HEADLINE")];
  if[(enlist `notify)~(key .j.k x); if[showhb;show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat)];
  if[not (0=count .sod.pt);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;]
  if[not (0=count .sod.ot);((show "notified";);.sod.ot: 4_.sod.ot;.sod.otseq:.sod.otseq+1;show .sod.ot;system "sleep 5";
- .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
- .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
+ .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamFutures;.echo.h .streamOption;.echo.h .streamNews;
+ .streamQuote:.j.j reqs_q[];.streamFutures:.j.j reqs_f[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
+/ .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
+/ .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
  .j.j reqs_n[]);show "Already subscribed"];];
  };
 
