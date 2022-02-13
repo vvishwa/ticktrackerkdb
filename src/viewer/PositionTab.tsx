@@ -157,8 +157,8 @@ const mapStateToProps = (state:any, ownProps:PositionTabProps) => {
     const td_chart:any[] = state.td_chart;
 
     const td_raw_map:Map<string, object> = td_raw !== undefined? new Map(td_raw.map(obj => [obj.ticker, {bidPrice:obj["bidPrice"], askPrice:obj["askPrice"], lastPrice:obj["lastPrice"], bidSize:obj["bidSize"],
-        askSize:obj["askSize"], totalVolume:obj["totalVol"], lastSize:obj["9"], highPrice:obj["12"], lowPrice:obj["13"], closePrice:obj["15"], openPrice:obj["28"], netChange:obj["29"],
-        week52High:obj["30"], week52Low:obj["31"]}])):new Map();
+        askSize:obj["askSize"], totalVolume:obj["totalVol"], lastSize:obj["9"], highPrice:obj["12"], lowPrice:obj["13"], closePrice:obj["15"], openPrice:obj["28"], netChange:obj["netChange"],
+        week52High:obj["week52High"], week52Low:obj["week52Low"]}])):new Map();
 
     console.log('td_raw_map', td_raw_map)
 
