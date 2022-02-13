@@ -74,6 +74,10 @@ getNews:{
   (`ticker`seq`errorCode`storyDateTime`headlineId`status`headline`storyId`countKW`keywordArray`isHot`storySource xcol td_news) where not storyId ~\:"N/A"
   };
 
+getFutures: {
+ select ticker, description, bidPrice,askPrice,lastPrice,netChange, openInterest, bidSize,askSize,totalVol,quoteDateTime:ltime 1970.01.01+0D00:00:00.001*(`long$ quoteTime) from td_futures_raw
+ };
+
 /*publish data according to subs table */
 pub:{
   row:(0!subs)[x];
