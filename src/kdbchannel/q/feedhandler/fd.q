@@ -102,8 +102,8 @@ reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptseq:1;.sod.otseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,29,30,31")};
-pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
-pms_f:{`keys`fields!(`$.sod.l1futuresmod[];`$ "0,1,2,3,4,5,6,7,8")};
+pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
+pms_f:{`keys`fields!(`$.sod.l1futuresmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
 pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
