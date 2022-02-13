@@ -70,7 +70,8 @@ getQuotes:{
   `func`result!(`getQuotes;res)};
 
 getNews:{
-  select from (`ticker`errorCode`storyDateTime`headlineId`status`headline`storyId`countKW`keywordArray xcol td_news) where not status ~\:"N/A"
+  select ticker, storyDateAndTime:ltime 1970.01.01+0D00:00:00.001*(`long$ storyDateTime),headline,isHot,countKW,storySource from
+  (`ticker`seq`errorCode`storyDateTime`headlineId`status`headline`storyId`countKW`keywordArray`isHot`storySource xcol td_news) where not storyId ~\:"N/A"
   };
 
 /*publish data according to subs table */

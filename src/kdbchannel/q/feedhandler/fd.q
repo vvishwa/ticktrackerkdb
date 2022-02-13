@@ -102,7 +102,7 @@ reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptseq:1;.sod.otseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,29,30,31")};
-pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
+pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
 pms_f:{`keys`fields!(`$.sod.l1futuresmod[];`$ "0,1,2,3,4,5,6,7,8")};
 pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
@@ -153,9 +153,9 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 
 .getTdTableFutures:{t:raze x[0];
- tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8!(ddef^x)[`key`1`2`3`4`5`6`7`8]} each t;
- tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol tab;
- table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol from tabl;
+ tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`8`9`10`16`19`23!(ddef^x)[`key`1`2`3`4`5`8`9`10`16`19`23]} each t;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`totalVol`lastSize`quoteTime`description`netChange`openInterest xcol tab;
+ table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, totalVol, lastSize, quoteTime, description, netChange, openInterest from tabl;
  (count cols table;`ticker xkey table)
  }
 
@@ -185,8 +185,6 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  if[not (0=count .sod.ot);((show "notified";);.sod.ot: 4_.sod.ot;.sod.otseq:.sod.otseq+1;show .sod.ot;system "sleep 5";
  .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamFutures;.echo.h .streamOption;.echo.h .streamNews;
  .streamQuote:.j.j reqs_q[];.streamFutures:.j.j reqs_f[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
-/ .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamOption;.echo.h .streamNews;
-/ .streamQuote:.j.j reqs_q[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
  .j.j reqs_n[]);show "Already subscribed"];];
  };
 
