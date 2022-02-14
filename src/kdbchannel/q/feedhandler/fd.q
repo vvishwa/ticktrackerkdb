@@ -42,6 +42,8 @@ h:neg hopen `:localhost:5001; /* connect to rdb */
 h2:hopen `:localhost:5001; /* connect to rdb */
 .sod.pt:distinct h2(`.sod.position_tkrs)
 .sod.ot:distinct (flip select `$symbol from h2(`.sod.option_tkrs))`symbol
+.sod.arft:"/CL,/ES,/RTY,/ZN,/GC,/NQ";
+.sod.ft:`$ "," vs .sod.arft;
 
 feedQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
  h(`upd;`quote;select `$assetType,`$assetMainType,`$cusip,`$symbol,`$description,`float$bidPrice,
@@ -98,17 +100,19 @@ reqs:(enlist `requests)!(enlist enlist req);
 
 .sod.ptmod:{("," sv string (distinct 4#.sod.pt))}
 .sod.otmod:{("," sv string (distinct 4#.sod.ot))}
-.sod.l1futuresmod:{"/ES,/CL,/RTY"}
+.sod.ftmod:{("," sv string (distinct 4#.sod.ft))}; 
 
-.sod.ptseq:1;.sod.otseq:1;
+/{"/ES,/CL,/RTY"}
+
+.sod.ptseq:1;.sod.otseq:1;.sod.ftseq:1;
 pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,29,30,31")};
 pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
-pms_f:{`keys`fields!(`$.sod.l1futuresmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
+pms_f:{`keys`fields!(`$.sod.ftmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
 pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
 req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
-req_f:{`service`command`requestid`account`source`parameters!("LEVELONE_FUTURES";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_f[])};
+req_f:{`service`command`requestid`account`source`parameters!("LEVELONE_FUTURES";"SUBS";.sod.ftseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_f[])};
 req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_n[])};
 
 reqs_q:{(enlist `requests)!(enlist enlist req_q[])};
@@ -182,6 +186,7 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  {t:enlist x; h(`upn; .getTdTableNews[t])} each (select content from (raze .j.k x) where service~\:"NEWS_HEADLINE")];
  if[(enlist `notify)~(key .j.k x); if[showhb;show ltime 1970.01.01+0D00:00:00.001*(enlist "J"$(raze value .j.k x)`heartbeat)];
  if[not (0=count .sod.pt);.sod.pt: 4_.sod.pt;.sod.ptseq:.sod.ptseq+1;show .sod.pt;]
+ if[not (0=count .sod.ft);.sod.ft: 4_.sod.ft;.sod.ftseq:.sod.ftseq+1;show .sod.ft;]
  if[not (0=count .sod.ot);((show "notified";);.sod.ot: 4_.sod.ot;.sod.otseq:.sod.otseq+1;show .sod.ot;system "sleep 5";
  .echo.h .streamChart;.echo.h .streamQuote;.echo.h .streamFutures;.echo.h .streamOption;.echo.h .streamNews;
  .streamQuote:.j.j reqs_q[];.streamFutures:.j.j reqs_f[];.streamOption:.j.j reqs_o[];.streamChart:.j.j reqs_c[];.streamNews:
