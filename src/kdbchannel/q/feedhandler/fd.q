@@ -129,22 +129,6 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  raze bidId, totalVol from t1;t2
  }
 
-.getTdTableRaw1:{t:raze x[0];t0:t[where {(not `assetSubType in key x) and (12=count x)} each t];
- /show `t0, t0;
- t1:`ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol xcol t0;
- t2:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId,
- raze bidId, totalVol from t1;
- t0_adr:t[where {(13=count x) and `assetSubType in key x} each t];
- if[not 0=count t0_adr;
- t1_adr:`ticker`delayed`assetMaintype`assetSubType`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol
- xcol t0_adr;
- t2_adr:select `$ticker, delayed, `$assetMaintype, `$cusip, bidPrice, askPrice, lastPrice, bidSize, askSize, raze askId,
- raze bidId, totalVol from t1_adr;
- t_all:(t2 uj t2_adr);];
- if[0=count t0_adr;t_all:t2];
- (count cols t_all;`ticker xkey t_all)
- }
-
 .getTdTableQuote:{t:raze x[0];
  tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8`29`30`31!(ddef^x)[`key`1`2`3`4`5`6`7`8`29`30`31]} each t;
  tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol`netChange`week52High`week52Low xcol tab;

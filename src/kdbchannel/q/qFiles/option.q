@@ -78,6 +78,7 @@ show lotdir
  sp:{syms:`$(x`instrument)`symbol; prices:x`averagePrice;(syms,prices)} each ((positionsraw`securitiesAccount)`positions);
  /show sp;
  {tab:distinct 5#.sod.callSch[x[0];neg x[1];2];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+ {tab:distinct 5#.sod.putSch[x[0];neg x[1];2];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
  positionsraw}
 
 .sod.extractOption:{[opttype;sym;stkprice;moneyin];
@@ -85,11 +86,11 @@ show lotdir
  consumer_key:"NHDTVYJXAMKKRRG4K4HS4SWSBQVUXRX1";
  url:base_url_option,consumer_key,"&symbol=",(string sym);dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
  if[opttype=`call;chain:(raze (raze tall)`callExpDateMap);];
+ if[opttype=`put;chain:(raze (raze tall)`putExpDateMap);];
  if[not `FAILED~(`$tall`status)[0];
  strikes:(key chain)[where moneyin> stkprice+\: -9h $ string key chain];];
  if[`FAILED~(`$tall`status)[0];
  strikes:`0.0;
- /dt:flip `symbol`description`strikePrice`daysToExpiration`sch`intrinsicValue`openInterest`inTheMoney!"********"$\:();
  dt:([] symbol:();description:();strikePrice:();daysToExpiration:();sch:();intrinsicValue:();openInterest:();inTheMoney:());
  chain:enlist (enlist strikes)!(enlist dt);];
  select from raze chain[strikes]
