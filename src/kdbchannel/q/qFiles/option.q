@@ -64,8 +64,9 @@ show lotdir
  positionsraw:.req.get["https://api.tdameritrade.com/v1/accounts/489682556?fields=positions";()!()];
  `.sod.position_tkrs upsert {`$x`symbol}each ((positionsraw`securitiesAccount)`positions)`instrument;
  sp:{syms:`$(x`instrument)`symbol; prices:x`averagePrice;(syms,prices)} each ((positionsraw`securitiesAccount)`positions);
- {tab:distinct 5#.sod.callSch[x[0];neg x[1];0.1*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
- {tab:distinct 5#.sod.putSch[x[0];neg x[1];0.1*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+ {tab:distinct 5#.sod.callSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+ system "sleep 20";
+ {tab:distinct 5#.sod.putSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
  positionsraw}
 
 .sod.extractOption:{[opttype;sym;stkprice;moneyin];
