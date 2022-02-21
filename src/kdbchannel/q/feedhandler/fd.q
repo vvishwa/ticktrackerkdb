@@ -105,13 +105,14 @@ reqs:(enlist `requests)!(enlist enlist req);
 /{"/ES,/CL,/RTY"}
 
 .sod.ptseq:1;.sod.otseq:1;.sod.ftseq:1;
-pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,29,30,31")};
+pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,10,11,29,30,31")};
+pms_c:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
 pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
 pms_f:{`keys`fields!(`$.sod.ftmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
 pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
-req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
+req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_c[])};
 req_f:{`service`command`requestid`account`source`parameters!("LEVELONE_FUTURES";"SUBS";.sod.ftseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_f[])};
 req_n:{`service`command`requestid`account`source`parameters!("NEWS_HEADLINE";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_n[])};
 
@@ -134,9 +135,9 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 
 .getTdTableQuote:{t:raze x[0];
- tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8`29`30`31!(ddef^x)[`key`1`2`3`4`5`6`7`8`29`30`31]} each t;
- tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol`netChange`week52High`week52Low xcol tab;
- table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol, netChange, week52High, week52Low from tabl;
+ tab:{ddef:(`4;`5)!(0f;0f);val:`key`1`2`3`4`5`6`7`8`10`11`29`30`31!(ddef^x)[`key`1`2`3`4`5`6`7`8`10`11`29`30`31]} each t;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol`tradeTime`quoteTime`netChange`week52High`week52Low xcol tab;
+ table:select `$ticker, bidPrice, askPrice, lastPrice, bidSize, askSize, askId, bidId, totalVol, tradeTime, quoteTime, netChange, week52High, week52Low from tabl;
  (count cols table;`ticker xkey table)
  }
 
@@ -158,8 +159,9 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 .getTdTableNews:{t:raze x[0];t;t1:`seq`ticker xcol t;(count cols t1;`ticker xkey t1)}
 
 .getTdTableChart:{t:raze x[0];
- t1:`seq`ticker`openPrice`highPrice`lowPrice`closePrice`volume xcol t;
- (count cols t1;`ticker xkey t1)
+ t1:`seq`ticker`openPrice`highPrice`lowPrice`closePrice`volume`sequence`chartTime`chartDay xcol t;
+ table:select `$ticker, openPrice, highPrice, lowPrice, closePrice, volume, sequence, chartTime, chartDay from t1;
+ (count cols table;`ticker xkey table)
  }
 
 .echo.upd:{[x];if[(enlist `data)~(key .j.k x); show x; logWrite[x];
