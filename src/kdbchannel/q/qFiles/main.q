@@ -79,8 +79,15 @@ getFutures: {
  };
 
 getCharts: {
- select ticker, openPrice, highPrice, lowPrice, closePrice, volume, sequence, chartTime, chartDay from td_chart
+ select ticker, openPrice, highPrice, lowPrice, closePrice, volume, sequence, chartDateTime:ltime 1970.01.01+0D00:00:00.001*(`long$ chartTime), chartDay from td_chart
  };
+
+getTdQuotes: {
+  tab:select ticker,bidPrice,askPrice,lastPrice,bidSize,askSize,askId,bidId,totalVol,
+  localTradeTime:00:00:00.01*`long$tradeTime,localQuoteTime:
+  00:00:00.01*`long$quoteTime,netChange,week52High,week52Low from td_quote_raw;
+  tab idesc tab[;`localTradeTime]
+  };
 
 /*publish data according to subs table */
 pub:{
