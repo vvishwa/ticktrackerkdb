@@ -86,7 +86,7 @@ getTdQuotes: {
   tab:select ticker,bidPrice,askPrice,lastPrice,bidSize,askSize,askId,bidId,totalVol,
   localTradeTime:00:00:00.01*`long$tradeTime,localQuoteTime:
   00:00:00.01*`long$quoteTime,netChange,week52High,week52Low from td_quote_raw;
-  tab idesc tab[;`localTradeTime]
+  tab idesc tab[;`localQuoteTime]
   };
 
 /*publish data according to subs table */
