@@ -109,7 +109,7 @@ pms_q:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,10,11,29,30,31")};
 pms_c:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8")};
 pms_n:{`keys`fields!(`$.sod.ptmod[];`$ "0,1,2,3,4,5,6,7,8,9,10")};
 pms_f:{`keys`fields!(`$.sod.ftmod[];`$ "0,1,2,3,4,5,8,9,10,16,19,23")};
-pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,31,32,33,34,35,36")};
+pms_o:{`keys`fields!(`$.sod.otmod[];`$ "0,1,2,3,4,5,6,7,8,9,10,11,12,13,23,24,26,31,32,33,34,35,36")};
 req_q:{`service`command`requestid`account`source`parameters!("QUOTE";"SUBS";.sod.ptseq;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_q[])};
 req_o:{`service`command`requestid`account`source`parameters!("OPTION";"SUBS";.sod.otseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_o[])};
 req_c:{`service`command`requestid`account`source`parameters!("CHART_EQUITY";"SUBS";.sod.ptseq+1;upr[`accounts][0][`accountId];upr[`streamerInfo][`appId];pms_c[])};
@@ -149,10 +149,10 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
  }
 
 .getTdTableOption:{t:raze x[0];
- tab:{ddef:(`2;`3;`4;`5;`6;`7;`8;`9;`10;`11;`12;`13)!(0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);val:`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`31`32`33`34`35`36!(ddef^x)[`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`31`32`33`34`35`36]} each t;
+ tab:{ddef:(`2;`3;`4;`5;`6;`7;`8;`9;`10;`11;`12;`13)!(0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);val:`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`26`31`32`33`34`35`36!(ddef^x)[`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`26`31`32`33`34`35`36]} each t;
  tab: `delayed`0`1 _ tab;
- tabl:`ticker`bidPrice`askPrice`lastPrice`highPrice`lowPrice`closePrice`totalVol`openInt`vol`quoteTime`tradeTime`intrinsicValue`netChange`strikePrice`daysToExpiration`delta`gamma`theta`vega`rho xcol tab;
- table:select `$ticker,bidPrice,askPrice,lastPrice,highPrice,lowPrice,closePrice,totalVol,openInt,vol,quoteTime,tradeTime,intrinsicValue,netChange,strikePrice,daysToExpiration,delta,gamma,theta,vega,rho from tabl;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`highPrice`lowPrice`closePrice`totalVol`openInt`vol`quoteTime`tradeTime`intrinsicValue`netChange`underlying`strikePrice`daysToExpiration`delta`gamma`theta`vega`rho xcol tab;
+ table:select `$ticker,bidPrice,askPrice,lastPrice,highPrice,lowPrice,closePrice,totalVol,openInt,vol,quoteTime,tradeTime,intrinsicValue,netChange,underlying,strikePrice,daysToExpiration,delta,gamma,theta,vega,rho from tabl;
  (count cols table;`ticker xkey table)
  }
 

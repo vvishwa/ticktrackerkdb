@@ -10,7 +10,7 @@ updj:{cnt:x[0]; tab:x[1];if[cnt=14;`td_quote_raw upsert tab;if[not 0=count key r
 
 updf:{cnt:x[0]; tab:x[1];if[cnt=12;`td_futures_raw upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_futures_raw;tab)]]; if[cnt<12; show tab; show (td_futures_raw lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_futures_raw;tab)]]}
 
-updo:{cnt:x[0]; tab:x[1];if[cnt=21;`td_option_raw upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_option_raw;tab)]]; if[cnt<21; show tab; show (td_option_raw lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_option_raw;tab)]]}
+updo:{cnt:x[0]; tab:x[1];if[cnt=22;`td_option_raw upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_option_raw;tab)]]; if[cnt<22; show tab; show (td_option_raw lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_option_raw;tab)]]}
 
 upc:{cnt:x[0]; tab:x[1];if[cnt=9;`td_chart upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_chart;tab)]];if[cnt<9; `td_chart upsert (td_chart lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
 
