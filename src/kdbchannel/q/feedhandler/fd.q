@@ -151,8 +151,8 @@ wsurl:"wss://",upr[`streamerInfo][`streamerSocketUrl],"/ws";
 .getTdTableOption:{t:raze x[0];
  tab:{ddef:(`2;`3;`4;`5;`6;`7;`8;`9;`10;`11;`12;`13)!(0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f;0f);val:`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`26`31`32`33`34`35`36!(ddef^x)[`key`delayed`0`1`2`3`4`5`6`7`8`9`10`11`12`13`23`24`26`31`32`33`34`35`36]} each t;
  tab: `delayed`0`1 _ tab;
- tabl:`ticker`bidPrice`askPrice`lastPrice`highPrice`lowPrice`closePrice`totalVol`openInt`vol`quoteTime`tradeTime`intrinsicValue`netChange`underlying`strikePrice`daysToExpiration`delta`gamma`theta`vega`rho xcol tab;
- table:select `$ticker,bidPrice,askPrice,lastPrice,highPrice,lowPrice,closePrice,totalVol,openInt,vol,quoteTime,tradeTime,intrinsicValue,netChange,`$underlying,strikePrice,daysToExpiration,delta,gamma,theta,vega,rho from tabl;
+ tabl:`ticker`bidPrice`askPrice`lastPrice`highPrice`lowPrice`closePrice`totalVol`openInt`vol`quoteTime`tradeTime`intrinsicValue`netChange`strikePrice`underlying`daysToExpiration`delta`gamma`theta`vega`rho xcol tab;
+ table:select `$ticker,bidPrice,askPrice,lastPrice,highPrice,lowPrice,closePrice,totalVol,openInt,vol,quoteTime,tradeTime,intrinsicValue,netChange,strikePrice,`$underlying,daysToExpiration,delta,gamma,theta,vega,rho from tabl;
  (count cols table;`ticker xkey table)
  }
 
