@@ -11,6 +11,7 @@ show lotdir
 .sod.position_tkrs:`LAZR`SOS
 /.sod.position_tkrs:`GOOG`MSFT`ELYS`RTX`TELL`AMD`PLUG`BA`AAPL`RIOT`BNGO`ARVL`HTBX`VLDR`ISEE`RESN`FCEL`NNOX`SOLO`PFE`SNDL`REAL;
 /`TSM`ACST`BBD`STM`MT`SYNH
+.sod.optionLoaded:0b
 
 .eod.getOption: {[lottd;ticker;exch;dateIndex]
  allsyms:ticker,".",exch;
@@ -62,11 +63,14 @@ show lotdir
  refreshed_access_token:access_dict[`access_token];
  .req.def["Authorization"]:"Bearer ",refreshed_access_token;
  positionsraw:.req.get["https://api.tdameritrade.com/v1/accounts/489682556?fields=positions";()!()];
+ if[not .sod.optionLoaded;
  `.sod.position_tkrs upsert {`$x`symbol}each ((positionsraw`securitiesAccount)`positions)`instrument;
- sp:{syms:`$(x`instrument)`symbol; prices:x`averagePrice;(syms,prices)} each ((positionsraw`securitiesAccount)`positions);
- {tab:distinct 5#.sod.callSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
- system "sleep 20";
- {tab:distinct 5#.sod.putSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+  sp:{syms:`$(x`instrument)`symbol; prices:x`averagePrice;(syms,prices)} each ((positionsraw`securitiesAccount)`positions);
+  {tab:distinct 5#.sod.callSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+  system "sleep 20";
+  {tab:distinct 5#.sod.putSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
+  .sod.optionLoaded:1;
+ ];
  positionsraw}
 
 .sod.extractOption:{[opttype;sym;stkprice;moneyin];

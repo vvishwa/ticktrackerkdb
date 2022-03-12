@@ -14,7 +14,7 @@ updo:{cnt:x[0]; tab:x[1];if[cnt=22;`td_option_raw upsert tab;if[not 0=count key 
 
 upc:{cnt:x[0]; tab:x[1];if[cnt=9;`td_chart upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_chart;tab)]];if[cnt<9; `td_chart upsert (td_chart lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
 
-upn:{cnt:x[0]; tab:x[1];if[cnt=12;`td_news upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_news;tab)]];if[cnt<12; `td_news upsert (td_news lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;tab)]]}
+upn:{cnt:x[0]; tab:x[1];if[cnt=12;`td_news upsert tab;if[not 0=count key regi; (neg (key regi)[0]`handle).j.j (-999;`td_news;tab)]];if[cnt<12; `td_news upsert (td_news lj tab); if[not 0=count key regi; (neg (key regi)[0]`handle) .j.j (-9999;`td_news;tab)]]}
 
 quote: flip `assetType`assetMainType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTimeInLong`tradeTimeInLong`mark`exchange`exchangeName`marginable`shortable`volatility`digits`52WkHigh`52WkLow`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`regularMarketTradeTimeInLong`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!"sssssffsffsffsfffsfffiifssbbfiffifffssfiiiffffb"$\:();
 td_quote_rt:(flip `ticker`delayed`assetMaintype`cusip`bidPrice`askPrice`lastPrice`bidSize`askSize`askId`bidId`totalVol!())
