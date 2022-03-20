@@ -71,6 +71,11 @@ show lotdir
   {tab:distinct 5#.sod.putSch[x[0];neg x[1];0.2*x[1]];if[not 1=count tab;`.sod.option_tkrs upsert tab]} each sp;
   .sod.optionLoaded:1;
  ];
+ if [.sod.optionLoaded;
+ (neg (key regi)[0]`handle) .j.j (-9999;`td_quote_raw;td_quote_raw);
+ (neg (key regi)[0]`handle) .j.j (-9999;`td_quote_raw;td_quote_raw);
+ (neg (key regi)[0]`handle) .j.j (-9999;`td_chart;td_chart)
+ ];
  positionsraw}
 
 .sod.extractOption:{[opttype;sym;stkprice;moneyin];

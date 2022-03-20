@@ -101,8 +101,8 @@ class BalanceTab extends Component<BalanceTabProps> {
 
         params.columnApi.autoSizeAllColumns();
     }
-    
-};
+
+}
 
 const mapStateToProps = (state:any) => {
     if(state.securitiesAccount !== undefined) {
@@ -111,7 +111,8 @@ const mapStateToProps = (state:any) => {
             projectedBalances: state.securitiesAccount !== undefined? state.securitiesAccount.projectedBalances:[]}
         console.log('BalanceTab.mapStateToProps retValue', retValue);
         return retValue;
-    }
+    } else
+        return undefined;
 };
 
 export default connect(mapStateToProps)(BalanceTab);
