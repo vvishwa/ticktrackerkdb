@@ -106,30 +106,44 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
     createColunDefs(): (ColDef|ColGroupDef)[] {
         return [
-            //{ field:'assetType', headerName:'Asset'},
-            //{ field:'cusip', headerName:'Cusip'},
-            { field:'instrument.symbol', headerName:'Symbol'},
-            { field:'averagePrice', headerName:'Avg Price'},
-            { field:'lastPrice', headerName:'Last Price'},
-            { field:'longQuantity', headerName:'Qty'},
-            { field:'settledLongQuantity', headerName:'Settled Qty'},
-            { field: 'marketValue', headerName:'Mkt Value'},
-            { valueGetter:param => {return (param.data.marketValue - param.data.averagePrice*param.data.longQuantity);},
-                                            cellStyle:p=>{return p.value>0?{color: 'green'}:{color: 'red'};},
-                                            valueFormatter:number=>{return (Math.round(number.value * 100) / 100).toFixed(2);}, headerName: 'P/L Open'},
-            { field: 'totalVolume', headerName:'Tot Vol'},
-            { field: 'openPrice1m', headerName: '1M Open'},
-            { field: 'closePrice1m', headerName: '1M Close'},
-            { field: 'highPrice1m', headerName: '1M High'},
-            { field: 'lowPrice1m', headerName: '1M Low'},
-            { field: 'volume1m', headerName: '1M Vol'},
-            { field: 'bidPrice', headerName:'Bid'},
-            { field: 'bidSize', headerName:'Bid Size'},
-            { field: 'askPrice', headerName:'Ask'},
-            { field: 'askSize', headerName:'Ask Size'},
-            { field: 'netChange', headerName: 'Net Chg'},
-            { field: 'week52High', headerName: '52W High'},
-            { field: 'week52Low', headerName: '52W Low'},
+            {
+                headerName:'Main',
+                children: [
+                    { field:'instrument.symbol', headerName:'Symbol'},
+                    { field:'averagePrice', headerName:'Avg Price'},
+                    { field:'longQuantity', headerName:'Qty'},
+                    //{ field:'settledLongQuantity', headerName:'Settled Qty'},
+                    { field: 'marketValue', headerName:'Mkt Value'},
+                    { valueGetter:param => {return (param.data.marketValue - param.data.averagePrice*param.data.longQuantity);},
+                        cellStyle:p=>{return p.value>0?{color: 'green'}:{color: 'red'};},
+                        valueFormatter:number=>{return (Math.round(number.value * 100) / 100).toFixed(2);}, headerName: 'P/L Open'},
+                    ]
+            },
+            {
+                headerName: 'RT Quotes',
+                children: [
+                    { field:'lastPrice', headerName:'Last Price'},
+                    { field: 'totalVolume', headerName:'Tot Vol', columnGroupShow: 'open'},
+                    { field: 'bidPrice', headerName:'Bid', columnGroupShow: 'open'},
+                    { field: 'bidSize', headerName:'Bid Size', columnGroupShow: 'open'},
+                    { field: 'askPrice', headerName:'Ask', columnGroupShow: 'open'},
+                    { field: 'askSize', headerName:'Ask Size', columnGroupShow: 'open'},
+                    { field: 'netChange', headerName: 'Net Chg', columnGroupShow: 'open'},
+                    { field: 'week52High', headerName: '52W High', columnGroupShow: 'open'},
+                    { field: 'week52Low', headerName: '52W Low', columnGroupShow: 'open'},
+                ]
+            },
+            {
+                headerName: '1 Min Chart',
+                children: [
+                    { field: 'openPrice1m', headerName: '1M Open', columnGroupShow: 'open'},
+                    { field: 'closePrice1m', headerName: '1M Close', columnGroupShow: 'open'},
+                    { field: 'highPrice1m', headerName: '1M High', columnGroupShow: 'open'},
+                    { field: 'lowPrice1m', headerName: '1M Low', columnGroupShow: 'open'},
+                    { field: 'volume1m', headerName: '1M Vol'},
+                ],
+            }
+
         ]
     }
 
