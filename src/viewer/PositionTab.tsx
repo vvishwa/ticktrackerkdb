@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
+import {ColDef, ColGroupDef, ColumnApi, GridApi, GridOptions, GridReadyEvent} from 'ag-grid-community';
 import { Position } from '../dto/position';
 import { store } from '../store/store';
 import { send } from '@giantmachines/redux-websocket/dist';
@@ -25,6 +25,7 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
+    private columnApi: ColumnApi | undefined;
 
     constructor(props: PositionTabProps) {
         super(props);
@@ -83,12 +84,17 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
         return (
             <div className="ag-theme-alpine" style={ {width: '95%', height:'75%' } } >
-                <div className="ag-theme-alpine" style={ { height: 750, margin: '2%'} } >
+                <div className="ag-theme-alpine" style={ { margin: '1%'} }>
+                    <button type={"button"} onClick={() =>this.toggleExpansion(true)}>Expand All</button>
+                    <button type={"button"} onClick={() =>this.toggleExpansion(false)}>Collapse All</button>
+                </div>
+
+                <div className="ag-theme-alpine" style={ { height: 750, margin: '1%'} } >
                     <AgGridReact
                         immutableData={true}
                         rowData={this.state.positionRows}
                         defaultColDef={this.createDefColDefs()}
-                        columnDefs={this.createColunDefs()}
+                        columnDefs={this.createColumnDefs()}
                         getRowNodeId={(n:Position) =>{return n.instrument.symbol}}
                         
                         ref={(grid: any) => {
@@ -104,42 +110,46 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
         );
     }    
 
-    createColunDefs(): (ColDef|ColGroupDef)[] {
+    roundedNumber = (number:any) => {return (Math.round(number.value * 100) / 100).toFixed(2);}
+    createColumnDefs(): (ColDef|ColGroupDef)[] {
         return [
             {
                 headerName:'Main',
+                groupId:'MainGroup',
                 children: [
                     { field:'instrument.symbol', headerName:'Symbol'},
-                    { field:'averagePrice', headerName:'Avg Price'},
-                    { field:'longQuantity', headerName:'Qty'},
+                    { field:'averagePrice', headerName:'Avg Price', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
+                    { field:'longQuantity', headerName:'Qty', columnGroupShow: 'open'},
                     //{ field:'settledLongQuantity', headerName:'Settled Qty'},
-                    { field: 'marketValue', headerName:'Mkt Value'},
+                    { field: 'marketValue', headerName:'Mkt Value', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
                     { valueGetter:param => {return (param.data.marketValue - param.data.averagePrice*param.data.longQuantity);},
-                        cellStyle:p=>{return p.value>0?{color: 'green'}:{color: 'red'};},
+                        cellStyle:p=>{return p.value>0?{color: 'green'}:{color: 'red'};}, columnGroupShow: 'open',
                         valueFormatter:number=>{return (Math.round(number.value * 100) / 100).toFixed(2);}, headerName: 'P/L Open'},
                     ]
             },
             {
                 headerName: 'RT Quotes',
+                groupId: 'RTQuotesGroup',
                 children: [
-                    { field:'lastPrice', headerName:'Last Price'},
+                    { field:'lastPrice', headerName:'Last Price', valueFormatter: this.roundedNumber},
                     { field: 'totalVolume', headerName:'Tot Vol', columnGroupShow: 'open'},
-                    { field: 'bidPrice', headerName:'Bid', columnGroupShow: 'open'},
+                    { field: 'bidPrice', headerName:'Bid', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
                     { field: 'bidSize', headerName:'Bid Size', columnGroupShow: 'open'},
-                    { field: 'askPrice', headerName:'Ask', columnGroupShow: 'open'},
+                    { field: 'askPrice', headerName:'Ask', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
                     { field: 'askSize', headerName:'Ask Size', columnGroupShow: 'open'},
                     { field: 'netChange', headerName: 'Net Chg', columnGroupShow: 'open'},
-                    { field: 'week52High', headerName: '52W High', columnGroupShow: 'open'},
-                    { field: 'week52Low', headerName: '52W Low', columnGroupShow: 'open'},
+                    { field: 'week52High', headerName: '52W High', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
+                    { field: 'week52Low', headerName: '52W Low', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
                 ]
             },
             {
                 headerName: '1 Min Chart',
+                groupId: 'ChartGroup',
                 children: [
-                    { field: 'openPrice1m', headerName: '1M Open', columnGroupShow: 'open'},
-                    { field: 'closePrice1m', headerName: '1M Close', columnGroupShow: 'open'},
-                    { field: 'highPrice1m', headerName: '1M High', columnGroupShow: 'open'},
-                    { field: 'lowPrice1m', headerName: '1M Low', columnGroupShow: 'open'},
+                    { field: 'openPrice1m', headerName: '1M Open', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
+                    { field: 'closePrice1m', headerName: '1M Close', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
+                    { field: 'highPrice1m', headerName: '1M High', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
+                    { field: 'lowPrice1m', headerName: '1M Low', columnGroupShow: 'open', valueFormatter: this.roundedNumber},
                     { field: 'volume1m', headerName: '1M Vol'},
                 ],
             }
@@ -149,19 +159,28 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
     createDefColDefs(): (ColDef|ColGroupDef) {
         return {
+            width:120,
             autoHeight: false,
             resizable: true,
             filter: true,
+            sortable: true
             //cellRenderer: 'agAnimateSlideCellRenderer'
         }
     }
 
     onGridReady = (params: GridReadyEvent) => {
         this.gridApi = params.api;
-
-        params.columnApi.autoSizeAllColumns();
+        this.columnApi = params.columnApi;
+        //params.columnApi.autoSizeAllColumns();
     }
-    
+
+    toggleExpansion = (expand:boolean) => {
+        store.dispatch(send({id: uuidv1(), func:'.sod.getPositionRaw', obj:0}));
+        let groupNames = ['MainGroup', 'RTQuotesGroup', 'ChartGroup'];
+        groupNames.forEach(groupId => {
+            this.columnApi?.setColumnGroupOpened(groupId,expand);
+        })
+    }
 };
 
 

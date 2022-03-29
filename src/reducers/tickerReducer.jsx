@@ -63,13 +63,13 @@ const funcResponse = (msg, prevState) => {
             retValue = {td_chart: fArgs,};
             break;
         case 'td_futures_raw':
-            retValue = {td_futures_raw: fArgs,};
+            retValue = {...prevState, td_futures_raw: fArgs,};
             break;
         case 'td_option_raw':
-            retValue = {td_option_raw: fArgs,};
+            retValue = {...prevState, td_option_raw: fArgs,};
             break;
         case 'td_news':
-            retValue = {td_news: fArgs,};
+            retValue = {...prevState, td_news: fArgs,};
             break;
         default:
             retValue = {...prevState};
