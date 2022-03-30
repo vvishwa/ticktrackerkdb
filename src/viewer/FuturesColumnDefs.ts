@@ -10,6 +10,15 @@ export const futurColDefs:(ColDef|ColGroupDef)[] = [
     {field: 'totalVol', headerName:'Tot Vol'},
     {field: 'lastSize', headerName:'Last Size'},
     {field: 'quoteTime', headerName:'Quote Time'},
-    {field: 'description', headerName:'Descrption'},
+    {field: 'description', headerName:'Description'},
     {field: 'netChange', headerName:'Net Chg'},
     {field: 'openInterest', headerName:'Open Int'}]
+
+export const newsColDefs:(ColDef|ColGroupDef)[] = [
+    {field: 'ticker', headerName:'Ticker',},
+    {field: 'storyDateAndTime', headerName:'Date Time',},
+    {field: 'headline', headerName:'Head line', wrapText:true, width:1024},
+    {field: 'isHot', headerName:'Is Hot?', sortable:true},
+    {field: 'countKW', headerName:'Hit Count', sortable:true},
+    {field: 'storySource', headerName:'Source',}
+]

@@ -68,8 +68,8 @@ const funcResponse = (msg, prevState) => {
         case 'td_option_raw':
             retValue = {...prevState, td_option_raw: fArgs,};
             break;
-        case 'td_news':
-            retValue = {...prevState, td_news: fArgs,};
+        case 'getNews':
+            retValue = {...prevState, news: fArgs,};
             break;
         default:
             retValue = {...prevState};

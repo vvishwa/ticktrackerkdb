@@ -19,6 +19,7 @@ import { connect } from '@giantmachines/redux-websocket';
 import { rtstore } from './store/rtstore';
 import { Provider } from 'react-redux';
 import FuturesTab from "./viewer/FuturesTab";
+import NewsTab from "./viewer/NewsTab";
 
 class App extends Component {
   constructor(props) {
@@ -70,7 +71,7 @@ class App extends Component {
       <input type="checkbox" checked={this.state.isNight} onChange={this.updateCSS} />
       <span className="slider round"></span>
     </label>);
-    let tabs = ["/", "/TickerTab", "/PostionTab", "/TradeTab", "/Futures"];
+    let tabs = ["/", "/TickerTab", "/PostionTab", "/TradeTab", "/Futures", "/NewsTab"];
     return (
       <div className={this.state.isNight ? 'nightMode' : 'dayMode'}>
         <Router>
@@ -83,6 +84,7 @@ class App extends Component {
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[2] ? "active" : ""} to={tabs[2]}>Current Position</NavbarBrand>
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[3] ? "active" : ""} to={tabs[3]}>Trades</NavbarBrand>
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[4] ? "active" : ""} to={tabs[4]}>Futures</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[5] ? "active" : ""} to={tabs[5]}>News</NavbarBrand>
                   <NavbarBrand className="daynightslide">{slider}</NavbarBrand>
                 </Nav>
               </Navbar>
@@ -120,6 +122,11 @@ class App extends Component {
               <Route path={tabs[4]} render={(props) =>
                   <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <FuturesTab />
+                  </div>
+              } />
+              <Route path={tabs[5]} render={(props) =>
+                  <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                    <NewsTab />
                   </div>
               } />
             </Switch>
