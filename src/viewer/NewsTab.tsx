@@ -62,6 +62,7 @@ class NewsTab extends Component<NewsTabProps> {
             autoHeight: false,
             resizable: true,
             filter: true,
+            sortable: true,
             menuTabs: ['generalMenuTab', 'filterMenuTab','columnsMenuTab']
         }
     }

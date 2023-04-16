@@ -48,13 +48,13 @@ const funcResponse = (msg, prevState) => {
             retValue = {...prevState, options: fArgs,};
             break;
         case '.sod.getTrades':
-            retValue = {...prevState, trades: fArgs,};
+            retValue = { trades: fArgs,};
             break;
         case '.sod.getPositionRaw':
-            retValue = {...prevState, securitiesAccount: fArgs.securitiesAccount,};
+            retValue = { securitiesAccount: fArgs.securitiesAccount,};
             break;
         case '.sod.getUserPrincipal':
-            retValue = {...prevState, userPrincipals: fArgs,};
+            retValue = { userPrincipals: fArgs,};
             break;
         case 'td_quote_raw':
             retValue = {td_quote_raw: fArgs,};
@@ -66,12 +66,13 @@ const funcResponse = (msg, prevState) => {
             retValue = {...prevState, td_futures_raw: fArgs,};
             break;
         case 'td_option_raw':
-            retValue = {...prevState, td_option_raw: fArgs,};
+            retValue = { td_option_raw: fArgs,};
             break;
         case 'getNews':
-            retValue = {...prevState, news: fArgs,};
+            retValue = { news: fArgs,};
             break;
         default:
+            console.log('defaulting.. fname', fName);
             retValue = {...prevState};
             break;
     }

@@ -14,7 +14,7 @@ type PositionTabProps = {
     td_chart: Map<string, object>;
     position:Position[],
     td_quote_raw:Map<string, object>,
-    userPrincipals:any
+    //userPrincipals:any
 }
 
 type PositionTabState = {
@@ -198,7 +198,7 @@ const mapStateToProps = (state:any, ownProps:PositionTabProps) => {
     const td_chart_map:Map<string, object> = td_chart !== undefined? new Map(td_chart.map(obj => [obj.ticker, {openPrice1m:obj["openPrice"], highPrice1m:obj["highPrice"], lowPrice1m:obj["lowPrice"],
         closePrice1m:obj["closePrice"], volume1m:obj["volume"]}])):new Map();
 
-    const retValue = {userPrincipals: state.userPrincipals,
+    const retValue = {//userPrincipals: state.userPrincipals,
         position: state.securitiesAccount !== undefined? state.securitiesAccount.positions:undefined,
         td_quote_raw: state.td_quote_raw !==undefined? td_raw_map:new Map(),
         td_chart: state.td_chart !== undefined? td_chart_map:new Map()}

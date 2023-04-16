@@ -20,6 +20,7 @@ import { rtstore } from './store/rtstore';
 import { Provider } from 'react-redux';
 import FuturesTab from "./viewer/FuturesTab";
 import NewsTab from "./viewer/NewsTab";
+import IRTab from "./viewer/IRTabs";
 
 class App extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class App extends Component {
       <input type="checkbox" checked={this.state.isNight} onChange={this.updateCSS} />
       <span className="slider round"></span>
     </label>);
-    let tabs = ["/", "/TickerTab", "/PostionTab", "/TradeTab", "/Futures", "/NewsTab"];
+    let tabs = ["/", "/TickerTab", "/PostionTab", "/TradeTab", "/Futures", "/NewsTab", "/IRTab"];
     return (
       <div className={this.state.isNight ? 'nightMode' : 'dayMode'}>
         <Router>
@@ -85,6 +86,7 @@ class App extends Component {
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[3] ? "active" : ""} to={tabs[3]}>Trades</NavbarBrand>
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[4] ? "active" : ""} to={tabs[4]}>Futures</NavbarBrand>
                   <NavbarBrand tag={Link} className={this.state.currentTab === tabs[5] ? "active" : ""} to={tabs[5]}>News</NavbarBrand>
+                  <NavbarBrand tag={Link} className={this.state.currentTab === tabs[6] ? "active" : ""} to={tabs[6]}>Interest Rate</NavbarBrand>
                   <NavbarBrand className="daynightslide">{slider}</NavbarBrand>
                 </Nav>
               </Navbar>
@@ -127,6 +129,11 @@ class App extends Component {
               <Route path={tabs[5]} render={(props) =>
                   <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <NewsTab />
+                  </div>
+              } />
+              <Route path={tabs[6]} render={(props) =>
+                  <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                    <IRTab />
                   </div>
               } />
             </Switch>

@@ -24,7 +24,7 @@ class TradeTab extends Component<TradeTabProps> {
     
     
     private flattendTrade(props: TradeTabProps): FlattenedTrade[] {
-        return props.trade.length !== 0 ? props.trade.filter((v=>{return v.type==='TRADE'})).map((v) => {
+        return props.trade !== undefined && props.trade.length !== 0 ? props.trade.filter((v=>{return v.type==='TRADE'})).map((v) => {
             return {
                 accountId: v.transactionItem.accountId, additionalFee: v.fees.additionalFee, amount: v.transactionItem.amount, assetType: v.transactionItem.instrument.assetType,
                 cashBalanceEffectFlag: v.cashBalanceEffectFlag, cdscFee: v.fees.cdscFee, commission: v.fees.commission, cost: v.transactionItem.cost,
@@ -92,14 +92,14 @@ class TradeTab extends Component<TradeTabProps> {
 const mapStateToProps = (state:any) => {
     
     console.log('TradeTab.mapStateToProps ', state);
-    let retValue = {trade: []}
+    //let retValue = {trade: []}
     if (state !== undefined) {
       if (state.trades !== undefined) {
-        retValue = {trade: state.trades}
+        return {trade: state.trades}
       }
     }
 
-    return retValue;
+    //return retValue;
 };
 
 export default connect(mapStateToProps)(TradeTab);

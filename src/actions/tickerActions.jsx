@@ -12,5 +12,11 @@ export const actions = {
             type: types.SELECT_DATED,
             payload: {datedDate}
         }
+    },
+    selectFutures(futures) {
+        return {
+            type: types.FUTURES,
+            futures: {futures}
+        }
     }
 };

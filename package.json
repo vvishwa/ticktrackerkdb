@@ -3,23 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "^25.0.1",
-    "@ag-grid-community/react": "^25.0.1",
-    "@ag-grid-enterprise/range-selection": "^25.0.1",
+    "@ag-grid-community/client-side-row-model": "^27.2.0",
+    "@ag-grid-community/react": "^27.2.0",
+    "@ag-grid-enterprise/range-selection": "^27.2.0",
     "@giantmachines/redux-websocket": "^1.5.0",
-    "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.2.2",
     "@types/uuid": "^8.3.0",
-    "ag-charts-community": "^2.1.0",
-    "ag-charts-react": "^2.1.0",
-    "ag-grid-community": "^24.1.0",
-    "ag-grid-react": "^24.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-redux": "^7.2.3",
+    "ag-charts-react": "^7.2.0",
+    "ag-grid-community": "^27.2.0",
+    "ag-grid-enterprise": "^29.2.0",
+    "ag-grid-react": "^27.2.0",
+    "jest-worker": "^29.5.0",
+    "n": "^9.1.0",
+    "react": "^18",
+    "react-dom": "^18.0.1",
+    "react-redux": "^8",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
+    "react-scripts": "5.0.0",
     "reactstrap": "^8.9.0",
     "typescript": "^4.0.5",
     "uuid": "^8.3.1",
@@ -33,8 +34,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {

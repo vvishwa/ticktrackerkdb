@@ -3,23 +3,38 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { actions } from '../actions/tickerActions';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 
-import { FlattenedTrade, Trade } from '../dto/trade';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {futurColDefs} from "./FuturesColumnDefs";
+import {bindActionCreators} from "redux";
 
 type FutureTabProps = {
+    futures:any[],
+    actions: typeof actions;
+}
+
+type FutureTabState = {
     futures:any[]
 }
 
-class FuturesTab extends Component<FutureTabProps> {
+class FuturesTab extends Component<FutureTabProps, FutureTabState> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
 
+    constructor(props: FutureTabProps) {
+        super(props);
+        this.state = {
+            futures: []
+        }
+    }
     componentDidUpdate(prevProps:FutureTabProps) {
         console.log('props received ', prevProps);
+        prevProps.futures.forEach(value => {
+            this.props.actions.selectFutures(value);
+        });
     }
 
     render() {
@@ -68,9 +83,17 @@ class FuturesTab extends Component<FutureTabProps> {
 
 };
 
-const mapStateToProps = (state:any) => {
+const mapDispatchToProps = (dispatch: any) => {
+    console.log("calling with ", dispatch)
+    //dispatch(actions)
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+};
 
-    console.log('FuturesTab.mapStateToProps ', state);
+const mapStateToProps = (state:any, ownProps:FutureTabState) => {
+
+    console.log('FuturesTab.mapStateToProps state', state);
     let retValue = {futures: []}
     if (state !== undefined && state.td_futures_raw !== undefined) {
         retValue = {futures: state.td_futures_raw}
@@ -79,4 +102,4 @@ const mapStateToProps = (state:any) => {
     return retValue;
 };
 
-export default connect(mapStateToProps)(FuturesTab);
+export default connect(mapStateToProps, mapDispatchToProps)(FuturesTab);

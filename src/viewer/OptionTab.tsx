@@ -5,7 +5,7 @@ import { RangeSelectionModule } from '@ag-grid-enterprise/range-selection';
 import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 
-import { AgChartsReact } from 'ag-charts-react';
+//import { AgChartsReact } from 'ag-charts-react';
 import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
 import { connect } from 'react-redux';
 
@@ -20,9 +20,9 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
     console.log('OptionTab: fillValue ', fillValue);
 
     if (gridApi.gridApi !== null && fillValue !== 0) {
-        const cells:CellRange[] = gridApi.gridApi.getCellRanges();
+        const cells:(CellRange[]|null) = gridApi.gridApi.getCellRanges();
                 
-        if (cells.length > 0) {
+        if (cells != null && cells.length > 0) {
             const startRowIndex:number = cells[0].startRow?.rowIndex === undefined? 0: cells[0].startRow?.rowIndex;
             const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
             const columnDef = cells[0].columns[0].getColDef();
@@ -32,7 +32,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
             if (startRowIndex !== null && endRowIndex !== null && startRowIndex !== endRowIndex) {
                 for(let indx=startRowIndex; indx <= endRowIndex; indx++) {
                     if (isEditable) {
-                        gridApi.gridApi?.getDisplayedRowAtIndex(indx).setDataValue(cells[0].columns[0], fillValue);
+                        gridApi.gridApi.getDisplayedRowAtIndex(indx)?.setDataValue(cells[0].columns[0], fillValue);
                     }
                 }
             gridApi.gridApi.clearRangeSelection(); 
@@ -48,9 +48,9 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         gridApi.gridApi.addEventListener('rangeSelectionChanged', (event: RangeSelectionChangedEvent) => {
             if (event.finished) {
                 
-                const cells:CellRange[] = event.api.getCellRanges();
+                const cells:(CellRange[]|null) = event.api.getCellRanges();
                 
-                if (cells.length > 0) {
+                if (cells !== null && cells.length > 0) {
                     const startRowIndex:number = cells[0].startRow?.rowIndex === undefined? 0: cells[0].startRow?.rowIndex;
                     const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
                     const columnDef = cells[0].columns[0].getColDef();
@@ -196,9 +196,9 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
                 </AgGridReact>
             </div>
 
-            <div style={{ height: '40%'}}>
+            {/* <div style={{ height: '40%'}}>
                 <AgChartsReact options={options} />
-            </div>
+            </div> */}
         </div>
     );
 
