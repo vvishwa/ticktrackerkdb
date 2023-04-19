@@ -8,6 +8,8 @@ import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 //import { AgChartsReact } from 'ag-charts-react';
 import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
 import { connect } from 'react-redux';
+import { AgChartsReact } from 'ag-charts-react/lib/agChartsReact';
+import { AgChartOptions } from 'ag-grid-enterprise/dist/lib/chart/agChartOptions';
 
 
 const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function, enableCorrection:Function}) => {
@@ -167,7 +169,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
 
     //console.log('OptionTab.optionTable.rowData = ' + JSON.stringify(chartData));
 
-    const options = {
+    const options:AgChartOptions = {
             data: chartData,
             series: [{
                 xKey: 'Strike',
@@ -196,9 +198,9 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
                 </AgGridReact>
             </div>
 
-            {/* <div style={{ height: '40%'}}>
+            {<div style={{ height: '40%'}}>
                 <AgChartsReact options={options} />
-            </div> */}
+            </div>}
         </div>
     );
 
