@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowClassParams } from 'ag-grid-community';
 //import { MenuModule } from '@ag-grid-enterprise/menu';
 import { store } from '../store/store';
 import { send } from '@giantmachines/redux-websocket';
@@ -14,8 +14,20 @@ import { tradeColDefs } from './TradeColumnDefs';
 import { connect } from 'react-redux';
 
 type TradeTabProps = {
-    trade:Trade[]
+    trade:Trade[],
+    isDark:boolean
 }
+
+// set background colour on every row, this is probably bad, should be using CSS classes
+const rowStyle = { background: 'cyan' };
+
+// set background colour on even rows again, this looks bad, should be using CSS classes
+const getRowStyle = (params:RowClassParams) => {
+    if (params.node.rowIndex !==null && params.node.rowIndex % 2 === 0) {
+        return { background: 'white' };
+    }
+};
+
 
 class TradeTab extends Component<TradeTabProps> {
 
@@ -50,6 +62,8 @@ class TradeTab extends Component<TradeTabProps> {
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
                     <AgGridReact
                         //modules={this.state.modules}
+                        rowStyle={rowStyle}
+                        getRowStyle={getRowStyle}
                         rowData={this.flattendTrade(this.props)}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
