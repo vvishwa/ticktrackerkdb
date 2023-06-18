@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { CellEditingStoppedEvent, ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
+import { CellEditingStoppedEvent, ColDef, ColGroupDef, GetRowIdFunc, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
@@ -20,6 +20,7 @@ type TickerTabState = {
 };
 
 class TickerTab extends Component<TickerTabProps, TickerTabState> {
+    getRowId: GetRowIdFunc = (params:any) =>{return params.data.symbol};
 
     constructor(props: TickerTabProps | Readonly<TickerTabProps>) {
         super(props);
@@ -40,11 +41,23 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
         rtstore.dispatch(wsconnect('ws://apj.local:5001/'));
     }
 
+    onCellEditingStopped = (event: CellEditingStoppedEvent) => {
+        if (this.gridApi) {
+            const items:string[] = [];
+            this.gridApi.forEachNode((node:RowNode) => {
+                items.push(node.data.symbol);
+                this.state.tickerList.push(node.data.symbol);
+            })
+            
+            if (items[items.length-1] !== '')
+                this.gridApi.applyTransaction({add:[{symbol:''}]})
+        }
+    }
+    
     clickToSubscribe = (e:any) => {
         if (this.gridApi) {
             const tickerList:any = [];
             this.gridApi.forEachNode((node: RowNode) =>{
-                //console.log('Node value ', node);
                 tickerList.push(node.data)
             })
 
@@ -65,13 +78,15 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
                         rowData={this.props.getQuotes_rslt.length === 0? [{symbol:''}]:this.props.getQuotes_rslt}
                         columnDefs={this.createColunDefs()}
                         defaultColDef={this.createDefColDefs()}
-                        getRowNodeId={(n:Quote) =>{return n.symbol}}
-                        
+                        //getRowNodeId={(n:Quote) =>{return n.symbol}}
+                        //getRowId={this.getRowId}
                         ref={(grid: any) => {
-                            if (grid) {
+                            if (grid && (!this.gridOptions)) {
                                 this.gridOptions = grid.gridOptions;
                             }
                         }}
+
+                        onCellEditingStopped={this.onCellEditingStopped}
                         onGridReady={this.onGridReady}>
                         
                     </AgGridReact> 
@@ -95,22 +110,6 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     onGridReady = (params: GridReadyEvent) => {
         this.gridApi = params.api;
         params.columnApi.autoSizeAllColumns();
-        this.addEventHandlers();
-    }
-    
-    addEventHandlers() {
-        if(this.gridOptions) {
-            this.gridOptions.onCellEditingStopped = (event: CellEditingStoppedEvent) => {
-                if (this.gridApi) {
-                    const items:string[] = [];
-                    this.gridApi.forEachNode((node:RowNode) => {
-                        items.push(node.data.symbol);
-                    })
-                    if (items[items.length-1] !== '')
-                        this.gridApi.applyTransaction({add:[{symbol:''}]})
-                }
-            }
-        }
     }
 };
 

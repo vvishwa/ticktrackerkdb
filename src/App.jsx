@@ -8,7 +8,6 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
-import TickerTab from './viewer/TickerTab';
 import PositionTab from './viewer/PositionTab';
 import TradeTab from './viewer/TradeTab';
 
@@ -21,6 +20,7 @@ import { Provider } from 'react-redux';
 import FuturesTab from "./viewer/FuturesTab";
 import NewsTab from "./viewer/NewsTab";
 import IRTab from "./viewer/IRTabs";
+import TickerTab from './viewer/TickerTab';
 
 class App extends Component {
   constructor(props) {
