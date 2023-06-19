@@ -24,7 +24,7 @@ const rowStyle = { background: 'cyan' };
 // set background colour on even rows again, this looks bad, should be using CSS classes
 const getRowStyle = (params:RowClassParams) => {
     if (params.node.rowIndex !==null && params.node.rowIndex % 2 === 0) {
-        return { background: 'white' };
+        return { background: 'pink' };
     }
 };
 
@@ -98,6 +98,7 @@ class TradeTab extends Component<TradeTabProps> {
     onGridReady = (params: GridReadyEvent) => {
         this.gridApi = params.api;
 
+        params.columnApi.autoSizeAllColumns();
         params.columnApi.autoSizeAllColumns();
     }
     

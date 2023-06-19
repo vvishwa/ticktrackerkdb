@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import {ColDef, ColGroupDef, ColumnApi, GridApi, GridOptions, GridReadyEvent} from 'ag-grid-community';
+import {ColDef, ColGroupDef, ColumnApi, GridApi, GridOptions, GridReadyEvent, RowClassParams} from 'ag-grid-community';
 import { Position } from '../dto/position';
 import { store } from '../store/store';
 import { send } from '@giantmachines/redux-websocket/dist';
@@ -79,6 +79,14 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
         store.dispatch(send({id: uuidv1(), func:'.sod.register', obj:0}));
     }
 
+    rowStyle = { background: 'cyan' };
+
+    getRowStyle = (params:RowClassParams) => {
+        if (params.node.rowIndex !==null && params.node.rowIndex % 2 === 0) {
+            return { background: 'pink' };
+        }
+    };
+
     render() {
         //console.log("this.state ", this.state)
 
@@ -92,6 +100,8 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
                 <div className="ag-theme-alpine" style={ { height: 750, margin: '1%'} } >
                     <AgGridReact
                         immutableData={true}
+                        rowStyle={this.rowStyle}
+                        getRowStyle={this.getRowStyle}
                         rowData={this.state.positionRows}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColumnDefs()}

@@ -1,6 +1,6 @@
 export const tradeColDefs = [
-    {field:'assetType', headerName:'Asset', cellStyle: {fontSize: '50%'}}, 
-    {field:'cusip', headerName:'Cusip', cellStyle: {fontSize: '50%'}}, 
+    /* {field:'assetType', headerName:'Asset', cellStyle: {fontSize: '50%'}}, 
+    {field:'cusip', headerName:'Cusip', cellStyle: {fontSize: '50%'}},  */
     {field:'symbol', headerName:'Symbol', cellStyle: {fontSize: '50%'}},
     
     {field:'amount', headerName:'Amount', cellStyle: {fontSize: '50%'}},

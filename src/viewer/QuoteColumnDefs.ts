@@ -2,10 +2,10 @@ import { ColDef, ColGroupDef } from "ag-grid-community";
 
 export const quoteColDefs:(ColDef|ColGroupDef)[] = [
     {field: 'symbol', headerName:'Ticker', singleClickEdit:true, editable: true},
-    {field: 'assetType', headerName:'Asset Type'},
+    /* {field: 'assetType', headerName:'Asset Type'}, */
     /*{field: 'assetMainType', headerName:'Main Asset Type'},*/
-    {field: 'cusip', headerName:'Cusip'},
-    {field: 'description', headerName:'Descrption'},
+    /* {field: 'cusip', headerName:'Cusip'}, */
+    {field: 'description', headerName:'Description'},
     {field: 'bidPrice', headerName:'Bid Price', type:'rightAligned'},
     {field: 'bidSize', headerName:'Bid Size', type:'rightAligned'},
     {field: 'bidId', headerName:'Bid Id'},

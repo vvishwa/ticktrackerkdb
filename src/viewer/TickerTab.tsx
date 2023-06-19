@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { CellEditingStoppedEvent, ColDef, ColGroupDef, GetRowIdFunc, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
+import { CellEditingStoppedEvent, ColDef, ColGroupDef, GetRowIdFunc, GridApi, GridOptions, GridReadyEvent, RowClassParams, RowNode } from 'ag-grid-community';
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
@@ -69,17 +69,27 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
         }
     } 
 
+    rowStyle = { background: 'cyan' };
+
+    getRowStyle = (params:RowClassParams) => {
+        if (params.node.rowIndex !==null && params.node.rowIndex % 2 === 0) {
+            return { background: 'pink' };
+        }
+    };
+
     render() {
         return (
             <div className="ag-theme-alpine" style={ {width: '95%' } } >
                 <button className='tickerlist' onClick={this.clickToSubscribe} >Subscribe</button>
-                <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
+                <div className="ag-theme-alpine" style={ { height: 800, margin: '2%', width: '95%'} } >
                     <AgGridReact
                         rowData={this.props.getQuotes_rslt.length === 0? [{symbol:''}]:this.props.getQuotes_rslt}
                         columnDefs={this.createColunDefs()}
                         defaultColDef={this.createDefColDefs()}
                         //getRowNodeId={(n:Quote) =>{return n.symbol}}
                         //getRowId={this.getRowId}
+                        rowStyle={this.rowStyle}
+                        getRowStyle={this.getRowStyle}
                         ref={(grid: any) => {
                             if (grid && (!this.gridOptions)) {
                                 this.gridOptions = grid.gridOptions;
@@ -109,6 +119,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
 
     onGridReady = (params: GridReadyEvent) => {
         this.gridApi = params.api;
+        params.api.sizeColumnsToFit();
         params.columnApi.autoSizeAllColumns();
     }
 };

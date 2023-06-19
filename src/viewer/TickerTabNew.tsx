@@ -16,14 +16,14 @@ type TickerTabProps = {
 
 const TickerTabNew = (props:TickerTabProps) => {
 
-    /* useEffect(() => {
+    useEffect(() => {
         rtstore.dispatch(wsconnect('ws://apj.local:5001/'));
-    }) */
+    })
 
-    //const[tickerList, setTickerList] = useState<string[]>([])
+    const[tickerList, setTickerList] = useState<string[]>([])
 
     const [gridApi, setGridApi] = useState<GridApi>();
-    //const [gridOptions, setGridOption] = useState<{gridOption:null|GridOptions}>({ gridOption: null});
+    const [gridOptions, setGridOption] = useState<{gridOption:null|GridOptions}>({ gridOption: null});
 
     const colDefn = quoteColDefs;
     const colDefaults =  {
@@ -32,43 +32,23 @@ const TickerTabNew = (props:TickerTabProps) => {
             cellRenderer: 'agAnimateSlideCellRenderer'
     }
 
-    const gridOptions1 = {
-
-        onCellEditingStopped: (event: CellEditingStoppedEvent) => {
-            console.log("TickerTabNew: gridOptions "+event+" \n GridApi "+gridApi)
-            if (gridApi) {
-                const items:string[] = [];
-                gridApi.forEachNode((node:RowNode) => {
-                    items.push(node.data.symbol);
-                })
-                if (items[items.length-1] !== '')
+    const onCellEditingStopped = (event: CellEditingStoppedEvent) => {
+        console.log("TickerTabNew: gridOptions "+event+" \n GridApi "+gridApi)
+        if (gridApi) {
+            const items:string[] = [];
+            gridApi.forEachNode((node:RowNode) => {
+                items.push(node.data.symbol);
+                setTickerList(items);
+            })
+            if (items[items.length-1] !== '')
                 gridApi.applyTransaction({add:[{symbol:''}]})
-            }
         }
     }
-
-    /*
-    const addEventHandlers = () =>{
-        if(gridOptions?.gridOption) {
-            gridOptions.gridOption.onCellEditingStopped = (event: CellEditingStoppedEvent) => {
-                console.log("TickerTabNew: gridOptions "+event+" \n GridApi "+gridApi)
-                if (gridApi) {
-                    const items:string[] = [];
-                    gridApi.forEachNode((node:RowNode) => {
-                        items.push(node.data.symbol);
-                    })
-                    if (items[items.length-1] !== '')
-                    gridApi.applyTransaction({add:[{symbol:''}]})
-                }
-            }
-        }
-    }
-    */
+    
 
     const onGridReady = (params: GridReadyEvent) => {
         setGridApi(params.api);
         params.columnApi.autoSizeAllColumns();
-        //addEventHandlers();
     }
 
     const clickToSubscribeTicker = (e:any) => {
@@ -82,11 +62,12 @@ const TickerTabNew = (props:TickerTabProps) => {
             const ll = tickers.filter((v: { symbol: string | undefined; }) => { if (v.symbol !== undefined && v.symbol !== '') return true; else return false}).map((v:any) => {return v.symbol});
     
             console.log('ll = ', ll)
-            //setTickerList(ll);
+            setTickerList(ll);
             rtstore.dispatch(send({ id:Date.now(), func:'.rt.subscribe', obj:[...ll]}));
         }
     } 
 
+    
     return (
         <div className="ag-theme-alpine" style={ {width: '95%' } } >
             <button className='tickerlist' onClick={clickToSubscribeTicker} >Subscribe</button>
@@ -97,13 +78,12 @@ const TickerTabNew = (props:TickerTabProps) => {
                     defaultColDef={colDefaults}
                     //getRowNodeId={(n:Quote) =>{return n.symbol}}
                     
-                    gridOptions={gridOptions1}
-                    /*
                     ref={(grid: any) => {
                         if (grid) {
                             setGridOption(grid.gridOptions);
                         }
-                    }} */
+                    }}
+                    onCellEditingStopped={onCellEditingStopped}
                     onGridReady={onGridReady}>
                     
                 </AgGridReact> 
@@ -112,7 +92,7 @@ const TickerTabNew = (props:TickerTabProps) => {
     );
 }
 const mapStateToProps = (state:any) => {
-    console.log('TickerTab.mapStateToProps ', state);
+    console.log('TickerTabNew.mapStateToProps ', state);
     let retValue = {getQuotes_rslt: []}
     if (state !== undefined) {
       if (state.rtResponse !== undefined && state.rtResponse.result !== undefined) {
