@@ -31,14 +31,22 @@ class FuturesTab extends Component<FutureTabProps, FutureTabState> {
         }
     }
     componentDidUpdate(prevProps:FutureTabProps) {
-        console.log('props received ', prevProps);
+        console.log('FuturesTab.trade props.futures prev ', prevProps.futures);
+        /*
+        this.setState({
+            futures : this.props.futures
+        })
+        
         prevProps.futures.forEach(value => {
             this.props.actions.selectFutures(value);
         });
+        */
     }
 
     render() {
-        console.log('FuturesTab.trade', this.props);
+        console.log('FuturesTab.trade props.futures -> ', this.props.futures, ' state.futures ->', this.state.futures);
+        
+
         return (
             <div className="ag-theme-alpine" style={ {width: '95%' } } >
                 <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >

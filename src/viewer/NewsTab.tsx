@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 
 import { connect } from 'react-redux';
 import { newsColDefs} from "./FuturesColumnDefs";
@@ -15,65 +15,44 @@ type NewsTabProps = {
     news:any[]
 }
 
-class NewsTab extends Component<NewsTabProps> {
-
-    gridApi: GridApi | undefined ;
-    gridOptions: GridOptions | undefined;
-
-    componentDidMount() {
+const NewsTab = (props:NewsTabProps) => {
+    useEffect(()=> {
         store.dispatch(send({ id:uuidv1(), func:'getNews', obj:0}));
-    }
+    }, []);
 
-    componentDidUpdate(prevProps:NewsTabProps) {
-        console.log('props received ', prevProps);
-    }
+    const [news, setNews] = useState<any[]>([]);
 
-    render() {
-        console.log('NewsTab.news', this.props);
-        return (
-            <div className="ag-theme-alpine" style={ {width: '95%' } } >
-                <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
-                    <AgGridReact
-                        //modules={this.state.modules}
-                        rowData={this.props.news}
-                        defaultColDef={this.createDefColDefs()}
-                        columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:any) =>{return n.ticker}}
+    const columnDefs = newsColDefs;
 
-                        ref={(grid: any) => {
-                            if (grid) {
-                                this.gridOptions = grid.gridOptions;
-                            }
-                        }}
-                        onGridReady={this.onGridReady}>
-
-                    </AgGridReact>
-                </div>
-            </div>
-        );
-    }
-
-    createColunDefs(): (ColDef|ColGroupDef)[] {
-        return newsColDefs;
-    }
-
-    createDefColDefs(): (ColDef|ColGroupDef) {
+    const defaultColDef = useMemo<ColDef>(() => {
         return {
-            autoHeight: false,
+            flex: 1,
             resizable: true,
             filter: true,
             sortable: true,
-            menuTabs: ['generalMenuTab', 'filterMenuTab','columnsMenuTab']
-        }
+            menuTabs: ['generalMenuTab', 'filterMenuTab','columnsMenuTab'],
+        };
+    }, []);
+    
+    if (props.news.length > 0) {
+       // setNews(props.news);        
     }
 
-    onGridReady = (params: GridReadyEvent) => {
-        this.gridApi = params.api;
+    return (   
+        <div className="ag-theme-alpine" style={ {width: '95%' } } >
+            <div className="ag-theme-alpine" style={ { height: 800, margin: '2%'} } >
+                <AgGridReact
+                    //modules={this.state.modules}
+                    rowData={props.news}
+                    defaultColDef={defaultColDef}
+                    columnDefs={columnDefs}
+                    getRowNodeId={(n:any) =>{return n.ticker}}>
 
-        params.columnApi.autoSizeAllColumns();
-    }
-
-};
+                </AgGridReact>
+            </div>
+        </div>
+    );
+}
 
 const mapStateToProps = (state:any) => {
 
@@ -86,4 +65,13 @@ const mapStateToProps = (state:any) => {
     return retValue;
 };
 
-export default connect(mapStateToProps)(NewsTab);
+const mergeProps = (ownProps:any, mapProps:any) => {
+    const { news } = ownProps
+    console.log('NewsTab.ownProps ', ownProps, 'mapProps ', mapProps);
+    return {
+      news:news
+    }
+  }
+  
+
+export default connect(mapStateToProps, null, mergeProps)(NewsTab);

@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from 'react';
+import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';

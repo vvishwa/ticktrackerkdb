@@ -10,10 +10,10 @@ import {
 } from 'ag-grid-community';
 
 const IRTab = () => {
-    const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+    //const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
+    //const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs, ] = useState<ColDef[]>([
         // this row shows the row index, doesn't use any data from the row
         {
             headerName: 'ID',
