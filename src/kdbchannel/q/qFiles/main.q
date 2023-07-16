@@ -70,12 +70,12 @@ getQuotes:{
   `func`result!(`getQuotes;res)};
 
 getNews:{
-  select ticker, storyDateAndTime:ltime 1970.01.01+0D00:00:00.001*(`long$ storyDateTime),headline,isHot,countKW,storySource from
+  select `$ticker, storyDateAndTime:ltime 1970.01.01+0D00:00:00.001*(`long$ storyDateTime),`$headline,isHot,countKW,`$storySource from
   (`ticker`seq`errorCode`storyDateTime`headlineId`status`headline`storyId`countKW`keywordArray`isHot`storySource xcol td_news) where not storyId ~\:"N/A"
   };
 
 getFutures: {
- select ticker, description, bidPrice,askPrice,lastPrice,netChange, openInterest, bidSize,askSize,totalVol,quoteDateTime:ltime 1970.01.01+0D00:00:00.001*(`long$ quoteTime) from td_futures_raw
+ select ticker, `$description, bidPrice,askPrice,lastPrice,netChange, openInterest, bidSize,askSize,totalVol,quoteDateTime:ltime 1970.01.01+0D00:00:00.001*(`long$ quoteTime) from td_futures_raw
  };
 
 getCharts: {
@@ -83,7 +83,7 @@ getCharts: {
  };
 
 getTdQuotes: {
-  tab:select ticker,bidPrice,askPrice,lastPrice,bidSize,askSize,askId,bidId,totalVol,
+  tab:select ticker,bidPrice,askPrice,lastPrice,bidSize,askSize,askId:`$askId[0],bidId:`$bidId[0],totalVol,
   localTradeTime:00:00:00.01*`long$tradeTime,localQuoteTime:
   00:00:00.01*`long$quoteTime,netChange,week52High,week52Low from td_quote_raw;
   tab idesc tab[;`localQuoteTime]
