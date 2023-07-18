@@ -1,11 +1,8 @@
-h(`.Q.dpft;`:/data/td/db/daily/options;.z.D;`ticker;`o)
-h(`.Q.dpft;`:/data/td/db/daily/news;.z.D;`ticker;`n)
-h(`.Q.dpft;`:/data/td/db/daily/quotes;.z.D;`ticker;`t)
-h(`.Q.dpft;`:/data/td/db/daily/futures;.z.D;`ticker;`f)
-h(`.Q.dpft;`:/data/td/db/daily/charts;.z.D;`ticker;`c)
+h:hopen `:localhost:5001;
+h(`.Q.dpft;`:/data/td/db/daily/options;.z.D;`ticker;`td_option_table)
+h(`.Q.dpft;`:/data/td/db/daily/quotes;.z.D;`ticker;`td_quote_table)
+h(`.Q.dpft;`:/data/td/db/daily/charts;.z.D;`ticker;`td_chart_table)
 
-o:0!td_option_raw
-n:getNews[]
-t:getTdQuotes[]
-c:getCharts[]
-f:getFutures[]
+h"td_option_table:delete from td_option_table"
+h"td_quote_table:delete from td_quote_table"
+h"td_chart_table:delete from td_chart_table"
