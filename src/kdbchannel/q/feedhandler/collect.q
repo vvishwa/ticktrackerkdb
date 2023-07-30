@@ -14,7 +14,7 @@ datajson:.j.k dataraw;tall:enlist datajson;
 \t 10000
 \p 5053
 
-path:`$":",dbdir,"/daily/stocks/"
+path:`$":",dbdir,"/daily/all/"
 tab: (flip `assetType`assetMainType`assetSubType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTime`tradeTime`mark`exchange`exchangeName`marginable`shortable`volatility`digits`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`tradeDate`regularMarketTradeTime`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!())
 
 show tab
