@@ -15,12 +15,12 @@ datajson:.j.k dataraw;tall:enlist datajson;
 \p 5053
 
 path:`$":",dbdir,"/daily/all/"
-tab: (flip `assetType`assetMainType`assetSubType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTime`tradeTime`mark`exchange`exchangeName`marginable`shortable`volatility`digits`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`tradeDate`regularMarketTradeTime`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!())
+td_etf_stock: (flip `assetType`assetMainType`assetSubType`cusip`symbol`description`bidPrice`bidSize`bidId`askPrice`askSize`askId`lastPrice`lastSize`lastId`openPrice`highPrice`lowPrice`bidTick`closePrice`netChange`totalVolume`quoteTime`tradeTime`mark`exchange`exchangeName`marginable`shortable`volatility`digits`nAV`peRatio`divAmount`divYield`divDate`securityStatus`regularMarketLastPrice`regularMarketLastSize`regularMarketNetChange`tradeDate`regularMarketTradeTime`netPercentChangeInDouble`markChangeInDouble`markPercentChangeInDouble`regularMarketPercentChangeInDouble`delayed!())
 
-show tab
+show td_etf_stock
 
 collectQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
- `tab insert select `$assetType,`$assetMainType,`$assetSubType,`$cusip,`$symbol,`$description,`float$bidPrice,
+ `td_etf_stock insert select `$assetType,`$assetMainType,`$assetSubType,`$cusip,`$symbol,`$description,`float$bidPrice,
  `float$bidSize,`$bidId,`float$askPrice,`float$askSize,`$askId,`float$lastPrice,`float$lastSize,`$lastId,`float$openPrice,
  `float$highPrice,`float$lowPrice,`$bidTick,`float$closePrice,`float$netChange,`float$totalVolume,
  quoteTime:1970.01.01+0D00:00:00.001*(`long$quoteTimeInLong),tradeTime:1970.01.01+0D00:00:00.001*(`long$tradeTimeInLong),
@@ -35,9 +35,9 @@ collectQuotes:{dataraw:.Q.hg url;datajson:.j.k dataraw;tall:enlist datajson;
 
 collectAllQuotes:{collectQuotes[x]} each "," vs symbolstr
 
-.z.ts:{$[.z.T < 20:00:00.000;{collectQuotes[x]} each "," vs symbolstr; (exit 0; .Q.dpft[path;.z.D;`symbol;`tab])]; show count tab}
+.z.ts:{$[.z.T < 20:00:00.000;{collectQuotes[x]} each "," vs symbolstr; (exit 0; .Q.dpft[path;.z.D;`symbol;`td_etf_stock])]; show count td_etf_stock}
 
-show tab
+show td_etf_stock
 \t 10000
 /create splayed table into path
 
