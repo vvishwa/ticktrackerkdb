@@ -4,7 +4,7 @@ import React, { PureComponent as Component } from 'react';
 //https://react-bootstrap.github.io/components/navbar/
 import { Nav, Navbar, NavbarBrand } from 'reactstrap';
 //https://reacttraining.com/react-router/core/guides/philosophy
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
@@ -121,48 +121,49 @@ class App extends Component {
                 </Nav>
               </Navbar>
             </div>
-            <Switch>
-              <Route exact path={tabs[0]} render={(props) => 
-              <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}><TickerPanel
-                  tabChange={this.tabChange}
-                  datedDates={this.state.datedDates}
-                  tickerList={this.state.tickerList}
-                  expirationDates={this.state.expirationDates}
-                  changeD={this.toggleDatedDates}
-                  changeX={this.toggleExpirationDates}
-                  clicked={this.toggleTicker}
-                  canCorrect={this.state.canCorrect}
-                  fillIn={this.fillInHandler} /><h4>EOD Feed Date {this.state.datedDate}: Ticker Selected {this.state.ticker}.{this.state.exchange} </h4>
-                  <OptionTab
-                    tabChange={this.tabChange}
-                    optionTable={this.state.optionTable}
-                    fillValue={this.state.fillConfidencePerc}
-                    enableCorrection={this.enableCorrectionHandler} /></div>
-              }
+            <Routes>
+              <Route path={tabs[0]}
+                     element={<div className="ag-theme-quartz"
+                                   style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}><TickerPanel
+                         tabChange={this.tabChange}
+                         datedDates={this.state.datedDates}
+                         tickerList={this.state.tickerList}
+                         expirationDates={this.state.expirationDates}
+                         changeD={this.toggleDatedDates}
+                         changeX={this.toggleExpirationDates}
+                         clicked={this.toggleTicker}
+                         canCorrect={this.state.canCorrect}
+                         fillIn={this.fillInHandler}/><h4>EOD Feed Date {this.state.datedDate}: Ticker
+                       Selected {this.state.ticker}.{this.state.exchange} </h4>
+                       <OptionTab
+                           tabChange={this.tabChange}
+                           optionTable={this.state.optionTable}
+                           fillValue={this.state.fillConfidencePerc}
+                           enableCorrection={this.enableCorrectionHandler}/></div>}
               />
-              <Route path={tabs[1]} render={(props) => 
-              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <TickerTab
-                  subsHandler={this.subscribe}
-                  getQuotes_rslt={this.state.getQuotes_rslt}
-                />
-              </div>
+              <Route path={tabs[1]} element={
+                  <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                    <TickerTab
+                        subsHandler={this.subscribe}
+                        getQuotes_rslt={this.state.getQuotes_rslt}
+                    />
+                  </div>
+              }/>
+              <Route path={tabs[2]} element={
+                  <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+                    <PositionTab position={this.state.positionraw.securitiesAccount.positions}/>
+                    <BalanceTab initialBalances={this.state.positionraw.securitiesAccount.initialBalances}
+                                currentBalances={this.state.positionraw.securitiesAccount.currentBalances}
+                                projectedBalances={this.state.positionraw.securitiesAccount.projectedBalances}
+                    />
+                  </div>
               } />
-              <Route path={tabs[2]} render={(props) => 
-              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                <PositionTab position={this.state.positionraw.securitiesAccount.positions}/>
-                <BalanceTab initialBalances={this.state.positionraw.securitiesAccount.initialBalances}
-                            currentBalances={this.state.positionraw.securitiesAccount.currentBalances}
-                            projectedBalances={this.state.positionraw.securitiesAccount.projectedBalances}
-                />
-              </div>
-              } />
-              <Route path={tabs[3]} render={(props) => 
+              <Route path={tabs[3]} element={
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <TradeTab trade={this.state.trade}/>
               </div>
               } />
-            </Switch>
+            </Routes>
           </div>
         </Router>
       </div>

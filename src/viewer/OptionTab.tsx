@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
+
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { RangeSelectionModule } from '@ag-grid-enterprise/range-selection';
-import '@ag-grid-community/core/dist/styles/ag-grid.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 
 import { AgChartsReact } from 'ag-charts-react';
-import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
-
+import {CellRange, GridApi, GridOptions, RangeSelectionChangedEvent} from 'ag-grid-community';
+import {AgChartOptions} from "ag-grid-enterprise";
 
 const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function, enableCorrection:Function}) => {
     const optionTable = props.optionTable;
@@ -19,22 +20,23 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
     console.log('OptionTab: fillValue ', fillValue);
 
     if (gridApi.gridApi !== null && fillValue !== 0) {
-        const cells:CellRange[] = gridApi.gridApi.getCellRanges();
-                
-        if (cells.length > 0) {
+        const cells:CellRange[] | null = gridApi.gridApi.getCellRanges();
+
+        if (cells != null && cells.length > 0) {
             const startRowIndex:number = cells[0].startRow?.rowIndex === undefined? 0: cells[0].startRow?.rowIndex;
             const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
             const columnDef = cells[0].columns[0].getColDef();
             const isEditable = columnDef.editable;
-            
+
             //console.log('Cells selected with startRowIndex ', startRowIndex, ', endRowIndex ', endRowIndex, ', isEdtable ', isEditable, ', field ', field);
             if (startRowIndex !== null && endRowIndex !== null && startRowIndex !== endRowIndex) {
                 for(let indx=startRowIndex; indx <= endRowIndex; indx++) {
                     if (isEditable) {
-                        gridApi.gridApi?.getDisplayedRowAtIndex(indx).setDataValue(cells[0].columns[0], fillValue);
+                        // @ts-ignore
+                        gridApi.gridApi.getDisplayedRowAtIndex(indx).setDataValue(cells[0].columns[0], fillValue);
                     }
                 }
-            gridApi.gridApi.clearRangeSelection(); 
+            gridApi.gridApi.clearRangeSelection();
             enableCorrection(false);
             }
         }
@@ -47,9 +49,9 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         gridApi.gridApi.addEventListener('rangeSelectionChanged', (event: RangeSelectionChangedEvent) => {
             if (event.finished) {
                 
-                const cells:CellRange[] = event.api.getCellRanges();
+                const cells:CellRange[] | null = event.api.getCellRanges();
                 
-                if (cells.length > 0) {
+                if (cells !== null && cells.length > 0) {
                     const startRowIndex:number = cells[0].startRow?.rowIndex === undefined? 0: cells[0].startRow?.rowIndex;
                     const endRowIndex:number = cells[0].endRow?.rowIndex === undefined? 0:cells[0].endRow?.rowIndex;
                     const columnDef = cells[0].columns[0].getColDef();
@@ -144,7 +146,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         ]
         
 
-    const gridOptions = {
+    const gridOptions :GridOptions = {
         pagination: true,
         rowSelection: 'single',
         enableRangeSelection: true,
@@ -166,7 +168,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
 
     //console.log('OptionTab.optionTable.rowData = ' + JSON.stringify(chartData));
 
-    const options = {
+    const options: AgChartOptions = {
             data: chartData,
             series: [{
                 xKey: 'Strike',
@@ -179,7 +181,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         };
     
     return (
-        <div className="ag-theme-alpine" style={ { height: 800, width: '98%' } } >
+        <div className="ag-theme-quartz-auto-dark" style={ { height: 800, width: '98%', fontSize:16} } >
             <div style={{ height: '60%'}}>
                 <AgGridReact
                     modules={modules}
@@ -188,7 +190,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
                     rowData={rowData}
                     onGridReady={onGridReady}
                     gridOptions={gridOptions}
-                    
+
                     >
                     {/*{ field:"Contract" filter={true} width:100}, */}
                     

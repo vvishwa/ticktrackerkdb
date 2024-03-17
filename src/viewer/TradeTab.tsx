@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 //import { MenuModule } from '@ag-grid-enterprise/menu';
 
@@ -54,7 +52,7 @@ class TradeTab extends Component<TradeTabProps, TradeTabState> {
                         rowData={this.state.trade}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:FlattenedTrade) =>{return n.symbol}}
+                        //getRowNodeId={(n:FlattenedTrade) =>{return n.symbol}}
                         
                         ref={(grid: any) => {
                             if (grid) {

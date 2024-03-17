@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { FlattenedPosition, Position } from '../dto/position';
 
@@ -42,16 +43,16 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
                         rowData={this.state.position}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:FlattenedPosition) =>{return n.symbol}}
-                        
+                        //gridApi.getRowNode={(n:FlattenedPosition) =>{return n.symbol}}
+
                         ref={(grid: any) => {
                             if (grid) {
                                 this.gridOptions = grid.gridOptions;
                             }
                         }}
                         onGridReady={this.onGridReady}>
-                        
-                    </AgGridReact> 
+
+                    </AgGridReact>
                 </div>     
             </div>
         );

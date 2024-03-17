@@ -45,8 +45,8 @@ wsFuncs.init = function () {
     this.qPromise(".eod.getDatedDates", this.q, 0).then(this.postGetDatedDates).catch(e => console.log(" Does not exist " + e).then(this.getDatedDates));
     this.qPromise(".eod.getTickers", this.q, 0).then(this.postGetTickers).catch(e => console.log(" Does not exist " + e).then(this.getTickers));
     this.qPromise(".sod.getPositions", this.q, 0).then(this.postGetPositions).catch(e => console.log(" Does not exist " + e).then(this.getPositions));
-    this.qPromise(".sod.getTrades", this.q, 0).then(this.postGetTrades).catch(e => console.log(" Does not exist " + e).then(this.getTrades));
-    this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
+    //this.qPromise(".sod.getTrades", this.q, 0).then(this.postGetTrades).catch(e => console.log(" Does not exist " + e).then(this.getTrades));
+    //this.qPromise(".sod.getPositionRaw", this.q, 0).then(this.postGetPositionRaw).catch(e => console.log("Does not exist " + e).then(this.postGetPositionRaw));
 }
 
 wsFuncs.getOption = function (indexDate, ticker, exchange, optionIndex) {

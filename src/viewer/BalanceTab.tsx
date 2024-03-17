@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { InitialBalance, CurrentBalance, ProjectedBalances } from '../dto/PositionAndBalance';
 
@@ -46,7 +46,7 @@ class BalanceTab extends Component<BalanceTabProps, BalanceTabState> {
                         rowData={this.state.balance}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:any) =>{return n.balanceType}}
+                        /*getRowNodeId={(n:any) =>{return n.balanceType}}*/
                         
                         ref={(grid: any) => {
                             if (grid) {
