@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import { ColDef } from 'ag-grid-community';
 
 import { connect } from 'react-redux';
@@ -46,7 +46,8 @@ const NewsTab = (props:NewsTabProps) => {
                     rowData={props.news}
                     defaultColDef={defaultColDef}
                     columnDefs={columnDefs}
-                    getRowNodeId={(n:any) =>{return n.ticker}}>
+                    //getRowNodeId={(n:any) =>{return n.ticker}}
+                >
 
                 </AgGridReact>
             </div>

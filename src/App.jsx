@@ -4,7 +4,7 @@ import React, { PureComponent as Component } from 'react';
 //https://react-bootstrap.github.io/components/navbar/
 import { Nav, Navbar, NavbarBrand } from 'reactstrap';
 //https://reacttraining.com/react-router/core/guides/philosophy
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 import TickerPanel from './selector/TickPanel';
 import OptionTab from './viewer/OptionTab';
@@ -91,8 +91,8 @@ class App extends Component {
                 </Nav>
               </Navbar>
             </div>
-            <Switch>
-              <Route exact path={tabs[0]} render={(props) => 
+            <Routes>
+              <Route path={tabs[0]} element={
               <div className="ag-theme-alpine" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}><TickerPanel
                   tabChange={this.tabChange}
                   canCorrect={this.state.canCorrect}
@@ -103,40 +103,40 @@ class App extends Component {
                     enableCorrection={this.enableCorrectionHandler} /></div>
               }
               />
-              <Route path={tabs[1]} render={(props) => 
+              <Route path={tabs[1]} element={
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <Provider store={rtstore}>
                   <TickerTab/>
                 </Provider>
               </div>
               } />
-              <Route path={tabs[2]} render={(props) => 
+              <Route path={tabs[2]} element={
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <PositionTab />
                 <BalanceTab />
               </div>
               } />
-              <Route path={tabs[3]} render={(props) => 
+              <Route path={tabs[3]} element={
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                 <TradeTab />
               </div>
               } />
-              <Route path={tabs[4]} render={(props) =>
+              <Route path={tabs[4]} element={
                   <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <FuturesTab />
                   </div>
               } />
-              <Route path={tabs[5]} render={(props) =>
+              <Route path={tabs[5]} element={
                   <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <NewsTab />
                   </div>
               } />
-              <Route path={tabs[6]} render={(props) =>
+              <Route path={tabs[6]} element={
                   <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                     <IRTab />
                   </div>
               } />
-            </Switch>
+            </Routes>
           </div>
         </Router>
       </div>

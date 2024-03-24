@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { AgGridReact } from '@ag-grid-community/react';
+import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
+
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { RangeSelectionModule } from '@ag-grid-enterprise/range-selection';
-import '@ag-grid-community/core/dist/styles/ag-grid.css';
-import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 
 //import { AgChartsReact } from 'ag-charts-react';
-import { CellRange, GridApi, RangeSelectionChangedEvent } from 'ag-grid-community';
+import {CellRange, GridApi, GridOptions, RangeSelectionChangedEvent} from 'ag-grid-community';
 import { connect } from 'react-redux';
-import { AgChartsReact } from 'ag-charts-react/lib/agChartsReact';
-import { AgChartOptions } from 'ag-grid-enterprise/dist/lib/chart/agChartOptions';
+import {AgChartOptions} from "ag-grid-enterprise";
+import {AgChartsReact} from "ag-charts-react";
+//import { AgChartsReact } from 'ag-charts-react/lib/agChartsReact';
+//import { AgChartOptions } from 'ag-grid-enterprise/dist/lib/chart/agChartOptions';
 
 
 const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Function, enableCorrection:Function}) => {
@@ -147,7 +150,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         ]
         
 
-    const gridOptions = {
+    const gridOptions :GridOptions = {
         pagination: true,
         rowSelection: 'single',
         enableRangeSelection: true,
@@ -169,7 +172,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
 
     //console.log('OptionTab.optionTable.rowData = ' + JSON.stringify(chartData));
 
-    const options:AgChartOptions = {
+    const options: AgChartOptions = {
             data: chartData,
             series: [{
                 xKey: 'Strike',
@@ -182,7 +185,7 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
         };
     
     return (
-        <div className="ag-theme-alpine" style={ { height: 800, width: '98%' } } >
+        <div className="ag-theme-quartz-auto-dark" style={ { height: 800, width: '98%', fontSize:16} } >
             <div style={{ height: '60%'}}>
                 <AgGridReact
                     modules={modules}
@@ -191,16 +194,16 @@ const OptionTab = (props: { optionTable: any, fillValue: any, tabChange: Functio
                     rowData={rowData}
                     onGridReady={onGridReady}
                     gridOptions={gridOptions}
-                    
+
                     >
                     {/*{ field:"Contract" filter={true} width:100}, */}
                     
                 </AgGridReact>
             </div>
 
-            {<div style={{ height: '40%'}}>
+            <div style={{ height: '40%'}}>
                 <AgChartsReact options={options} />
-            </div>}
+            </div>
         </div>
     );
 

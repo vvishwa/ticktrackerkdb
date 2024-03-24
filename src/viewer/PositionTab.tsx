@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import {ColDef, ColGroupDef, ColumnApi, GridApi, GridOptions, GridReadyEvent, RowClassParams} from 'ag-grid-community';
 import { Position } from '../dto/position';
 import { store } from '../store/store';
@@ -99,13 +99,13 @@ class PositionTab extends Component<PositionTabProps, PositionTabState> {
 
                 <div className="ag-theme-alpine" style={ { height: 750, margin: '1%'} } >
                     <AgGridReact
-                        immutableData={true}
+                        //immutableData={true}
                         rowStyle={this.rowStyle}
                         getRowStyle={this.getRowStyle}
                         rowData={this.state.positionRows}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColumnDefs()}
-                        getRowNodeId={(n:Position) =>{return n.instrument.symbol}}
+                        //getRowNodeId={(n:Position) =>{return n.instrument.symbol}}
                         
                         ref={(grid: any) => {
                             if (grid) {

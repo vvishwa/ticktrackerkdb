@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { CellEditingStoppedEvent, ColDef, ColGroupDef, GetRowIdFunc, GridApi, GridOptions, GridReadyEvent, RowClassParams, RowNode } from 'ag-grid-community';
+//import 'ag-grid-community/dist/styles/ag-grid.css';
+//import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import {
+    CellEditingStoppedEvent,
+    ColDef,
+    ColGroupDef,
+    GetRowIdFunc,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    IRowNode,
+    RowClassParams,
+    RowNode
+} from 'ag-grid-community';
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
@@ -44,7 +57,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     onCellEditingStopped = (event: CellEditingStoppedEvent) => {
         if (this.gridApi) {
             const items:string[] = [];
-            this.gridApi.forEachNode((node:RowNode) => {
+            this.gridApi.forEachNode((node:IRowNode) => {
                 items.push(node.data.symbol);
                 this.state.tickerList.push(node.data.symbol);
             })
@@ -57,7 +70,7 @@ class TickerTab extends Component<TickerTabProps, TickerTabState> {
     clickToSubscribe = (e:any) => {
         if (this.gridApi) {
             const tickerList:any = [];
-            this.gridApi.forEachNode((node: RowNode) =>{
+            this.gridApi.forEachNode((node: IRowNode) =>{
                 tickerList.push(node.data)
             })
 

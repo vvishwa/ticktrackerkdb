@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { InitialBalance, CurrentBalance, ProjectedBalances } from '../dto/PositionAndBalance';
 import {connect} from "react-redux";
@@ -13,7 +13,11 @@ type BalanceTabProps = {
     projectedBalances:ProjectedBalances
 }
 
-class BalanceTab extends Component<BalanceTabProps> {
+type BalanceTabState = {
+    balance:any[2]
+}
+
+class BalanceTab extends Component<BalanceTabProps, BalanceTabState> {
 
     gridApi: GridApi | undefined ;
     gridOptions: GridOptions | undefined;
@@ -22,8 +26,15 @@ class BalanceTab extends Component<BalanceTabProps> {
         super(props);
 
         console.log('BalanceTab.props ', props);
-    }
 
+        this.state = {
+            balance: [2]
+        }
+        this.state.balance[0] = props.currentBalances;
+        this.state.balance[0]['balanceType'] = 'Current';
+        this.state.balance[1] = props.initialBalances;
+        this.state.balance[1]['balanceType'] = 'Initial';
+    }
     componentDidUpdate(prevProps:BalanceTabProps) {
         console.log('props received ', prevProps);
     }
@@ -44,7 +55,7 @@ class BalanceTab extends Component<BalanceTabProps> {
                         rowData={balance}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:any) =>{return n.balanceType}}
+                        /*getRowNodeId={(n:any) =>{return n.balanceType}}*/
                         
                         ref={(grid: any) => {
                             if (grid) {

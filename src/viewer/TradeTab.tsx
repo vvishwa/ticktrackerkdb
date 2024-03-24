@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, RowClassParams } from 'ag-grid-community';
 //import { MenuModule } from '@ag-grid-enterprise/menu';
 import { store } from '../store/store';
 import { send } from '@giantmachines/redux-websocket';
 import { v1 as uuidv1 } from 'uuid';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 
 import { FlattenedTrade, Trade } from '../dto/trade';
 import { tradeColDefs } from './TradeColumnDefs';
@@ -67,7 +68,7 @@ class TradeTab extends Component<TradeTabProps> {
                         rowData={this.flattendTrade(this.props)}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:FlattenedTrade) =>{return String(n.orderId)}}
+                        //getRowNodeId={(n:FlattenedTrade) =>{return String(n.orderId)}}
                         
                         ref={(grid: any) => {
                             if (grid) {

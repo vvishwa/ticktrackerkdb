@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the grid
 import { actions } from '../actions/tickerActions';
 import { ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 
@@ -55,7 +55,7 @@ class FuturesTab extends Component<FutureTabProps, FutureTabState> {
                         rowData={this.props.futures}
                         defaultColDef={this.createDefColDefs()}
                         columnDefs={this.createColunDefs()}
-                        getRowNodeId={(n:any) =>{return n.ticker}}
+                        //getRowNodeId={(n:any) =>{return n.ticker}}
 
                         ref={(grid: any) => {
                             if (grid) {

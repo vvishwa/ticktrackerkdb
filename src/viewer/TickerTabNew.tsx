@@ -3,7 +3,7 @@ import { AgGridReact } from 'ag-grid-react';
 import '../selector/TickPanel.css'
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { CellEditingStoppedEvent, GridApi, GridOptions, GridReadyEvent, RowNode } from 'ag-grid-community';
+import {CellEditingStoppedEvent, GridApi, GridOptions, GridReadyEvent, IRowNode, RowNode} from 'ag-grid-community';
 import { quoteColDefs } from './QuoteColumnDefs';
 import { Quote } from '../dto/quote'
 import { rtstore } from '../store/rtstore';
@@ -36,7 +36,7 @@ const TickerTabNew = (props:TickerTabProps) => {
         console.log("TickerTabNew: gridOptions "+event+" \n GridApi "+gridApi)
         if (gridApi) {
             const items:string[] = [];
-            gridApi.forEachNode((node:RowNode) => {
+            gridApi.forEachNode((node:IRowNode) => {
                 items.push(node.data.symbol);
                 setTickerList(items);
             })
@@ -54,7 +54,7 @@ const TickerTabNew = (props:TickerTabProps) => {
     const clickToSubscribeTicker = (e:any) => {
         if (gridApi) {
             const tickers:any = [];
-            gridApi.forEachNode((node: RowNode) =>{
+            gridApi.forEachNode((node: IRowNode) =>{
                 //console.log('Node value ', node);
                 tickers.push(node.data)
             })
